@@ -1,6 +1,6 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "errno.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
 
 #include "include/dct.h"
 
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 
     // Allocate memory for loading file data
     size_t count = width * height;
-    void *image_dataptr = malloc(sizeof(uint8_t) * count);
+    void *image_dataptr = malloc(sizeof(int8_t) * count);
     if (image_dataptr == NULL)
     {
         printf("Not enough memory to load image.");
@@ -55,13 +55,13 @@ int main(int argc, char** argv)
     }
 
     // Load file data
-    fread(image_dataptr, sizeof(uint8_t), count, image_fptr);
+    fread(image_dataptr, sizeof(int8_t), count, image_fptr);
 
     // Close input file
     fclose(image_fptr);
 
     // Perform DCT on loaded data
-    dct((uint8_t*) image_dataptr, width, height);
+    dct((int8_t*) image_dataptr, width, height);
 
     // Free memory
     free(image_dataptr);
