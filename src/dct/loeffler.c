@@ -70,21 +70,19 @@ void dct_1d(const double data_in[8], double data_out[8])
     stage3out[7] = stage2out[7] + stage2out[5];
 
     // STAGE 4
-    double stage4out[8];
-    // outputs
-    stage4out[0] = stage3out[0];
-    stage4out[4] = stage3out[1];
-    stage4out[2] = stage3out[2];
-    stage4out[6] = stage3out[3];
-    // reflector
-    stage4out[7] = stage3out[7] - stage3out[4];
-    // scale-up units
-    stage4out[3] = sqrt_2 * stage3out[5];
-    stage4out[5] = sqrt_2 * stage3out[6];
-    // reflector
-    stage4out[1] = stage3out[7] + stage3out[4];
 
-    data_out = stage4out;
+    // outputs
+    data_out[0] = stage3out[0];
+    data_out[4] = stage3out[1];
+    data_out[2] = stage3out[2];
+    data_out[6] = stage3out[3];
+    // reflector
+    data_out[7] = stage3out[7] - stage3out[4];
+    // scale-up units
+    data_out[3] = sqrt_2 * stage3out[5];
+    data_out[5] = sqrt_2 * stage3out[6];
+    // reflector
+    data_out[1] = stage3out[7] + stage3out[4];
 }
 
 void dct_loeffler(const int8_t data_in[8][8], int8_t data_out[8][8])
