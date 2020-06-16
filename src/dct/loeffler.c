@@ -25,7 +25,7 @@ void transpose(double data[8][8])
 
 #define sqrt_2 (1.414213562373095048801688724209698078569671875376948073176)
 
-void dct_1d(double data_in[8], double data_out[8])
+void dct_1d(const double data_in[8], double data_out[8])
 {
     // STAGE 1
     double stage1out[8];
@@ -87,7 +87,7 @@ void dct_1d(double data_in[8], double data_out[8])
     data_out = stage4out;
 }
 
-void dct_loeffler(int8_t data_in[8][8], int8_t data_out[8][8])
+void dct_loeffler(const int8_t data_in[8][8], int8_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];

@@ -39,7 +39,7 @@ const double twostep_slow_CT[8][8] =
 // TODO: This could be made more efficient by having one function for each step,
 //       allowing us to optimize array access to always be row-first indexing.
 // preconditions: lhs != out and rhs != out (lhs == rhs OK)
-void square_matrix_multiply(double lhs[8][8], double rhs[8][8], double out[8][8])
+void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], double out[8][8])
 {
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
@@ -55,7 +55,7 @@ void square_matrix_multiply(double lhs[8][8], double rhs[8][8], double out[8][8]
 
 // input: 8x8 array, output: 8x8 array.
 // uses the row-column separation approach from slides 8-10.
-void dct_twostep_slow(int8_t data_in[8][8], int8_t data_out[8][8])
+void dct_twostep_slow(const int8_t data_in[8][8], int8_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
