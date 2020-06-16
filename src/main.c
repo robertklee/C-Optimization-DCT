@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "include/dct.h"
+#include "dct.h"
 
 int main(int argc, char** argv)
 {
     // Handle command-line arguments
-    const char *const invalid_argument = "Requires three arguments: filepath, width, height. Filepath must point to an 8-bit grayscale image.";
+    const char *const invalid_argument = "Requires three arguments: filepath, width, height. Filepath must point to an 8-bit grayscale image.\n";
     if (argc != 4)
     {
         printf(invalid_argument);
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 
     if (width % 8 != 0 || height % 8 != 0)
     {
-        printf("Width and height of image must both be integer multiples of 8.");
+        printf("Width and height of image must both be integer multiples of 8.\n");
         exit(-1);
     }
 
@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     FILE *image_fptr = fopen(filepath_arg, "r");
     if (image_fptr == NULL)
     {
-        printf("Cannot open specified file for reading.");
+        printf("Cannot open specified file for reading.\n");
         exit(-1);
     }
 
@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     void *image_dataptr = malloc(sizeof(int8_t) * count);
     if (image_dataptr == NULL)
     {
-        printf("Not enough memory to load image.");
+        printf("Not enough memory to load image.\n");
         exit(-1);
     }
 
