@@ -1,6 +1,7 @@
 # Custom
 build/
 .DS_Store
+.vscode
 
 # Prerequisites
 *.d
