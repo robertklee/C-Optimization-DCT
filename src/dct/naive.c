@@ -2,6 +2,7 @@
 
 #define PI 3.141592653589793
 #define SQRT_2_INV 0.707106781186547524400844362104849039284835937688474036588
+#define ROUND_NEAREST 0.5
 
 // 32-element lookup table.
 // cos_lookup[x] == cos(x * pi / 16)
@@ -65,7 +66,7 @@ void dct_naive(const int8_t data_in[8][8], int8_t data_out[8][8])
                 outer_sum += inner_sum;
             }
             // NB: this result could be outside [-128, 127]; it will fail in that case.
-            data_out[u][v] = (int8_t) (c_u * c_v * outer_sum);
+            data_out[u][v] = (int8_t) (c_u * c_v * outer_sum + ROUND_NEAREST);
         }
     }
 }
