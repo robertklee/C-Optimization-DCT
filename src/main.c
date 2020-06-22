@@ -18,6 +18,9 @@ int main(int argc, char** argv)
     const char * const width_arg = argv[2];
     const char * const height_arg = argv[3];
 
+    // set error indicator variable to 0 first
+    // https://stackoverflow.com/questions/36074422/why-cant-you-just-check-if-errno-is-equal-to-erange
+    errno = 0;
     long width = strtol(width_arg, NULL, 10);
     if (errno == ERANGE || width <= 0)
     {
