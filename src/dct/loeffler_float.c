@@ -1,4 +1,4 @@
-#include "dct/loeffler.h"
+#include "dct/loeffler_float.h"
 
 void transpose(double data[8][8])
 {
@@ -85,7 +85,7 @@ void dct_1d(const double data_in[8], double data_out[8])
     data_out[1] = stage3out[7] + stage3out[4];
 }
 
-void dct_loeffler(const int8_t data_in[8][8], int8_t data_out[8][8])
+void dct_loeffler_float(const int8_t data_in[8][8], int8_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];

@@ -9,7 +9,7 @@ add_executable(dct
                ${PROJECT_SOURCE_DIR}/src/dct.c
                ${PROJECT_SOURCE_DIR}/src/dct/naive.c
                ${PROJECT_SOURCE_DIR}/src/dct/twostep_slow.c
-               ${PROJECT_SOURCE_DIR}/src/dct/loeffler.c)
+               ${PROJECT_SOURCE_DIR}/src/dct/loeffler_float.c)
 target_include_directories(dct PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 

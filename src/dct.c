@@ -4,7 +4,7 @@
 
 #include "dct/naive.h"
 #include "dct/twostep_slow.h"
-#include "dct/loeffler.h"
+#include "dct/loeffler_float.h"
 
 void print_line(const int8_t x[8])
 {
@@ -65,7 +65,7 @@ void dct(int8_t *data, long width, long height)
     printf("\nTwo-step implementation:\n");
     run_dct(data, width, height, dct_twostep_slow);
 
-    // Third: loeffler implementation
-    printf("\nLoeffler implementation:\n");
-    run_dct(data, width, height, dct_loeffler);
+    // Third: loeffler floating-point implementation
+    printf("\nLoeffler floating-point implementation:\n");
+    run_dct(data, width, height, dct_loeffler_float);
 }
