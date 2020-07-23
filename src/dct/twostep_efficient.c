@@ -70,7 +70,7 @@ void twostep_efficient_firststep_1d(double x_in[8], double x_out[8], double coef
 
 }
 
-void dct_twostep_efficient(const int8_t data_in[8][8], int8_t data_out[8][8])
+void dct_twostep_efficient(const uint8_t data_in[8][8], uint8_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
@@ -102,7 +102,7 @@ void dct_twostep_efficient(const int8_t data_in[8][8], int8_t data_out[8][8])
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
-            data_out[i][j] = (int8_t) tmp_io[i][j];
+            data_out[i][j] = (uint8_t) tmp_io[i][j];
         }
     }
 }
