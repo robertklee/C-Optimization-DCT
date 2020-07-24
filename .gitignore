@@ -2,6 +2,8 @@
 build/
 .DS_Store
 .vscode
+build_xcode
+debug
 
 # Prerequisites
 *.d
