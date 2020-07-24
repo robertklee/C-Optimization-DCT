@@ -55,7 +55,7 @@ void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], doub
 
 // input: 8x8 array, output: 8x8 array.
 // uses the row-column separation approach from slides 8-10.
-void dct_twostep_slow(const uint8_t data_in[8][8], uint16_t data_out[8][8])
+void dct_twostep_slow(const uint8_t data_in[8][8], int16_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];

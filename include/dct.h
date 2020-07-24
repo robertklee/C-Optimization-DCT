@@ -5,7 +5,9 @@
 
 typedef enum {
     kUint8 = 0,
-    kUint16
+    kUint16,
+    kInt8,
+    kInt16
 } UintType;
 
 // Takes a pointer to an array of size width*height, performing an
