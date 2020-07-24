@@ -1,4 +1,5 @@
 #include "dct/loeffler_float.h"
+#include "util/constants.h"
 
 void transpose(double data[8][8])
 {
@@ -22,8 +23,6 @@ void transpose(double data[8][8])
 #define c6_a (0.765366864730179543456919968060797733522689124971254082867) // sqrt(2) * (sin(6pi/16) - cos(6pi/16))
 #define c6_b (-1.84775906502257351225636637879357657364483325172728497223) // sqrt(2) * -(sin(6pi/16) + cos(6pi/16))
 #define c6_c (0.541196100146196984399723205366389420061072063378015444681) // sqrt(2) * cos(6pi/16)
-
-#define sqrt_2 (1.414213562373095048801688724209698078569671875376948073176)
 
 void dct_1d(const double data_in[8], double data_out[8])
 {
@@ -79,8 +78,8 @@ void dct_1d(const double data_in[8], double data_out[8])
     // reflector
     data_out[7] = stage3out[7] - stage3out[4];
     // scale-up units
-    data_out[3] = sqrt_2 * stage3out[5];
-    data_out[5] = sqrt_2 * stage3out[6];
+    data_out[3] = SQRT_2 * stage3out[5];
+    data_out[5] = SQRT_2 * stage3out[6];
     // reflector
     data_out[1] = stage3out[7] + stage3out[4];
 }
