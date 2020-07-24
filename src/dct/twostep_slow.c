@@ -1,4 +1,5 @@
 #include "dct/twostep_slow.h"
+#include "util/round.h"
 
 // cn = cos(n*pi/16)
 #define c1 (0.980785280403230449126182236134239036973933730893336095002)
@@ -55,7 +56,7 @@ void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], doub
 
 // input: 8x8 array, output: 8x8 array.
 // uses the row-column separation approach from slides 8-10.
-void dct_twostep_slow(const uint8_t data_in[8][8], uint8_t data_out[8][8])
+void dct_twostep_slow(const uint8_t data_in[8][8], int16_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
@@ -66,14 +67,15 @@ void dct_twostep_slow(const uint8_t data_in[8][8], uint8_t data_out[8][8])
     }
     double tmp[8][8];
 
-    // TODO: figure out what happened to the 1/4 factor at the front - is it necessary (seems to be, but unclear)?
     square_matrix_multiply(twostep_slow_C, tmp_io, tmp);
     square_matrix_multiply(tmp, twostep_slow_CT, tmp_io);
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
-            data_out[i][j] = (uint8_t) tmp_io[i][j];
+            // additional 1/4 coefficient that is not in lecture notes
+            double temp_result = tmp_io[i][j] / 4;
+            data_out[i][j] = ROUND_INT16(temp_result);
         }
     }
 }
