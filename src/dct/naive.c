@@ -64,7 +64,7 @@ void dct_naive(const uint8_t data_in[8][8], uint16_t data_out[8][8])
                 outer_sum += inner_sum;
             }
             // NB: this result could be outside [-128, 127]; it will fail in that case.
-            data_out[u][v] = (uint16_t) (c_u * c_v * outer_sum + ROUND_NEAREST);
+            data_out[u][v] = (uint16_t) (c_u * c_v * outer_sum / 4 + ROUND_NEAREST);
         }
     }
 }
