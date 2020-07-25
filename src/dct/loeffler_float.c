@@ -98,20 +98,19 @@ void dct_1d(const double data_in[8], double data_out[8], uint8_t firstPass)
     }
     else
     {
-        // TODO figure out correct shifts
-        data_out[0] = (double)(ROUND_INT16(stage3out[0]) + (16>>3));
-        data_out[4] = (double)(ROUND_INT16(stage3out[1]) + (16>>3));
-        data_out[2] = (double)(ROUND_INT16(stage3out[2] + (16384>>10))>>3);
-        data_out[6] = (double)(ROUND_INT16(stage3out[3] + (16384>>10))>>3);
+        data_out[0] = stage3out[0] / 8;
+        data_out[4] = stage3out[1] / 8;
+        data_out[2] = stage3out[2] / 8;
+        data_out[6] = stage3out[3] / 8;
         // reflector
-        data_out[7] = (double)(ROUND_INT16(stage3out[7] - stage3out[4] + (16384>>10))>>3);
+        data_out[7] = (stage3out[7] - stage3out[4]) / 8;
         // scale-up units
-        data_out[3] = (double)(SQRT_2 * stage3out[5]); //TODO SCALE FACTOR
-        data_out[5] = (double)(SQRT_2 * stage3out[6]); //TODO SCALE FACTOR
+        data_out[3] = SQRT_2 * stage3out[5] / 8;
+        data_out[5] = SQRT_2 * stage3out[6] / 8;
         // reflector
-        data_out[1] = (double)(ROUND_INT16(stage3out[7] + stage3out[4] + (16384>>10))>>3);
+        data_out[1] = (stage3out[7] + stage3out[4]) / 8;
         
-        
+        // Potential solution
 //        data[0][i]=(double)((x6+16)>>3);
 //        data[4][i]=(double)((x4+16)>>3);
 //        data[2][i]=(double)((x8+16384)>>13);
