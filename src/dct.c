@@ -1,5 +1,6 @@
 #include "dct.h"
 #include "util/helpers.h"
+#include "util/constants.h"
 
 #include <stdio.h>
 
@@ -44,23 +45,33 @@ void copy_data(const uint8_t data_in[8][8], int16_t data_out[8][8])
     }
 }
 
-void dct(uint8_t *data, long width, long height)
+void dct(uint8_t *data, long width, long height, ExecutionMode executionMode)
 {
-    if (width % 8 != 0 || height % 8 != 0) return;
+    if (width % 8 != 0 || height % 8 != 0)
+    {
+        printf("Invalid block size.\n");
+        return;
+    } 
 
     // Print input (by using copy_data as the dct function parameter to run_dct)
     printf("Input:\n");
     run_dct(data, width, height, copy_data);
 
-    // First: naive implementation
-    printf("\nNaive implementation:\n");
-    run_dct(data, width, height, dct_naive);
+    if (executionMode == NAIVE || executionMode == ALL) {
+        // First: naive implementation
+        printf("\nNaive implementation:\n");
+        run_dct(data, width, height, dct_naive);
+    }
 
-    // Second: twostep implementation
-    printf("\nTwo-step implementation:\n");
-    run_dct(data, width, height, dct_twostep_slow);
-
-    // Third: loeffler floating-point implementation
-    printf("\nLoeffler floating-point implementation:\n");
-    run_dct(data, width, height, dct_loeffler_float);
+    if (executionMode == TWO_STEP || executionMode == ALL) {
+        // Second: twostep implementation
+        printf("\nTwo-step implementation:\n");
+        run_dct(data, width, height, dct_twostep_slow);
+    }
+    
+    if (executionMode == LOUFFLER_FLOAT || executionMode == ALL) {
+        // Third: loeffler floating-point implementation
+        printf("\nLoeffler floating-point implementation:\n");
+        run_dct(data, width, height, dct_loeffler_float);
+    }
 }

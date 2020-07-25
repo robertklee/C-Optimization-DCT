@@ -6,4 +6,12 @@
 #define SQRT_2_INV          0.707106781186547524400844362104849039284835937688474036588
 #define ROUND_NEAREST       0.5
 
+typedef enum {
+    NONE = 0,
+    NAIVE,
+    TWO_STEP,
+    LOUFFLER_FLOAT,
+    ALL
+} ExecutionMode;
+
 #endif // CONSTANTS_H
