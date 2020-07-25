@@ -3,13 +3,6 @@
 
 #include <stdint.h>
 
-typedef enum {
-    kUint8 = 0,
-    kUint16,
-    kInt8,
-    kInt16
-} UintType;
-
 // Takes a pointer to an array of size width*height, performing an
 // 2D DCT on the input, using 8x8 chunks. width and height must both
 // be divisible by 8. 
