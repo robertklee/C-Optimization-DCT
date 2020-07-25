@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     fclose(image_fptr);
 
     // Perform DCT on loaded data
-    dct((uint8_t*) image_dataptr, width, height);
+    dct((uint8_t*) image_dataptr, width, height, ALL);
 
     // Free memory
     free(image_dataptr);
