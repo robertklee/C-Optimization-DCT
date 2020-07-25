@@ -3,10 +3,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-void print_line(const void* x, UintType uintType)
+void print_line(const void* x, ElementType elementType)
 {
     // https://stackoverflow.com/questions/92396/why-cant-variables-be-declared-in-a-switch-statement
-    switch(uintType) {
+    switch(elementType) {
         case kUint8:
         {
             const uint8_t* m = (uint8_t*) x;

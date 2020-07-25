@@ -10,8 +10,8 @@ typedef enum {
     kInt16,
     kInt,
     kDouble
-} UintType;
+} ElementType;
 
-void print_line(const void* x, UintType uintType);
+void print_line(const void* x, ElementType elementType);
 
 #endif // HELPERS_H
