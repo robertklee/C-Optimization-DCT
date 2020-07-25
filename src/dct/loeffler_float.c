@@ -149,7 +149,7 @@ void dct_loeffler_float(const uint8_t data_in[8][8], int16_t data_out[8][8])
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
-            data_out[i][j] = (uint16_t) tmp_io[i][j];
+            data_out[i][j] = ROUND_INT16(tmp_io[i][j]);
         }
     }
 }
