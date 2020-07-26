@@ -7,11 +7,11 @@
 #define ROUND_NEAREST       0.5
 
 typedef enum {
-    NONE = 0,
+    ALL = 0,
+    NONE,
     NAIVE,
     TWO_STEP,
-    LOUFFLER_FLOAT,
-    ALL
+    LOUFFLER_FLOAT
 } ExecutionMode;
 
 #endif // CONSTANTS_H
