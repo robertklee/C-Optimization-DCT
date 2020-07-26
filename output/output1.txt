@@ -1,0 +1,16 @@
+Requires 3 or 4 arguments: filepath, width, height, <optional: algorithm>. Filepath must point to an 8-bit grayscale image. Algorithm parameter is defined as:
+0 (default): ALL
+1: NONE
+2: NAIVE
+3: TWO_STEP
+4: LOUFFLER_FLOAT
+Input:
+Region 0:
+0061 0062 0063 0064 0065 0066 0067 0068
+0031 0032 0033 0034 0035 0036 0037 0038
+0041 0042 0043 0044 0045 0046 0047 0048
+0031 0032 0033 0034 0035 0036 0037 0038
+002d 003d 002d 003d 002d 003d 002d 003d
+0026 0026 007c 007c 0026 0026 007c 007c
+002a 002f 002a 002f 002a 002f 002a 002f
+0028 0029 0028 0029 0028 0029 0028 0029
