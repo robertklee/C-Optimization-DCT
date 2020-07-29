@@ -70,23 +70,20 @@ void dct_1d(const double data_in[8], double data_out[8], uint8_t firstPass)
     stage3out[7] = stage2out[7] + stage2out[5];
 
     // STAGE 4
+    data_out[0] = stage3out[0];
+    data_out[4] = stage3out[1];
+    data_out[2] = stage3out[2];
+    data_out[6] = stage3out[3];
+    // reflector
+    data_out[7] = stage3out[7] - stage3out[4];
+    // scale-up units
+    data_out[3] = SQRT_2 * stage3out[5];
+    data_out[5] = SQRT_2 * stage3out[6];
+    // reflector
+    data_out[1] = stage3out[7] + stage3out[4];
 
     // outputs
-    if (firstPass)
-    {
-        data_out[0] = stage3out[0];
-        data_out[4] = stage3out[1];
-        data_out[2] = stage3out[2];
-        data_out[6] = stage3out[3];
-        // reflector
-        data_out[7] = stage3out[7] - stage3out[4];
-        // scale-up units
-        data_out[3] = SQRT_2 * stage3out[5];
-        data_out[5] = SQRT_2 * stage3out[6];
-        // reflector
-        data_out[1] = stage3out[7] + stage3out[4];
-        
-        // Potential fixed point solution
+    // Potential fixed point solution for first pass
 //        rows[i][0]=x6;
 //        rows[i][4]=x4;
 //        rows[i][2]=x8>>10;
@@ -95,22 +92,8 @@ void dct_1d(const double data_in[8], double data_out[8], uint8_t firstPass)
 //        rows[i][1]=(x2+x5)>>10;
 //        rows[i][3]=(x3*r2)>>17;
 //        rows[i][5]=(x0*r2)>>17;
-    }
-    else
-    {
-        data_out[0] = stage3out[0] / 8;
-        data_out[4] = stage3out[1] / 8;
-        data_out[2] = stage3out[2] / 8;
-        data_out[6] = stage3out[3] / 8;
-        // reflector
-        data_out[7] = (stage3out[7] - stage3out[4]) / 8;
-        // scale-up units
-        data_out[3] = SQRT_2 * stage3out[5] / 8;
-        data_out[5] = SQRT_2 * stage3out[6] / 8;
-        // reflector
-        data_out[1] = (stage3out[7] + stage3out[4]) / 8;
-        
-        // Potential solution
+
+    // Potential solution for second pass
 //        data[0][i]=(double)((x6+16)>>3);
 //        data[4][i]=(double)((x4+16)>>3);
 //        data[2][i]=(double)((x8+16384)>>13);
@@ -119,6 +102,17 @@ void dct_1d(const double data_in[8], double data_out[8], uint8_t firstPass)
 //        data[1][i]=(double)((x2+x5+16384)>>13);
 //        data[3][i]=(double)(((x3>>8)*r2+8192)>>12);
 //        data[5][i]=(double)(((x0>>8)*r2+8192)>>12);
+
+    if (!firstPass)
+    {
+        data_out[0] /= 8;
+        data_out[4] /= 8;
+        data_out[2] /= 8;
+        data_out[6] /= 8;
+        data_out[7] /= 8;
+        data_out[3] /= 8;
+        data_out[5] /= 8;
+        data_out[1] /= 8;
     }
 }
 
