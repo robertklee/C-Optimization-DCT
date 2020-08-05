@@ -7,6 +7,7 @@
 #include "dct/naive.h"
 #include "dct/twostep_slow.h"
 #include "dct/loeffler_float.h"
+#include "dct/loeffler_fixed.h"
 
 void run_dct(const uint8_t *data, long width, long height, void (*dct_func)(const uint8_t[8][8], int16_t[8][8]) )
 {
@@ -73,5 +74,10 @@ void dct(uint8_t *data, long width, long height, ExecutionMode executionMode)
         // Third: loeffler floating-point implementation
         printf("\nLoeffler floating-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_float);
+    }
+    
+    if (executionMode == LOUFFLER_FIXED || executionMode == ALL) {
+        printf("\nLoeffler fixed-point implementation:\n");
+        run_dct(data, width, height, dct_loeffler_fixed);
     }
 }
