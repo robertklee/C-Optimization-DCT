@@ -11,7 +11,8 @@ typedef enum {
     NONE,
     NAIVE,
     TWO_STEP,
-    LOUFFLER_FLOAT
+    LOUFFLER_FLOAT,
+    LOUFFLER_FIXED
 } ExecutionMode;
 
 #endif // CONSTANTS_H
