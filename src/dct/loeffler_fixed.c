@@ -22,7 +22,7 @@ void transpose_int(int32_t data[8][8])
     }
 }
 
-void butterfly(int32_t *top, int32_t *bot, uint8_t type)
+static void butterfly(int32_t *top, int32_t *bot, uint8_t type)
 {
     int32_t tmp_sum, tmp_top;
     switch (type)
@@ -50,7 +50,6 @@ void butterfly(int32_t *top, int32_t *bot, uint8_t type)
 
 void dct_1d_fixed(int32_t data[8])
 {
-    // TODO: run through this and ensure each value is correct
     int32_t tmp_val; // extra temporary value
     // STAGE 1
     tmp_val = data[0] + data[7]; // actually out[0]

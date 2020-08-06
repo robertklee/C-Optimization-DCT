@@ -8,6 +8,7 @@
 #include "dct/twostep_slow.h"
 #include "dct/loeffler_float.h"
 #include "dct/loeffler_fixed.h"
+#include "dct/loeffler_2d_fixed.h"
 
 void run_dct(const uint8_t *data, long width, long height, void (*dct_func)(const uint8_t[8][8], int16_t[8][8]) )
 {
@@ -80,5 +81,11 @@ void dct(uint8_t *data, long width, long height, ExecutionMode executionMode)
         // Fourth: loeffler fixed-point implementation
         printf("\nLoeffler fixed-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_fixed);
+    }
+
+    if (executionMode == LOEFFLER_2D_FIXED || executionMode == ALL) {
+        // Fifth: loeffler fixed-point implementation with direct 2d transform
+        printf("\nLoeffler fixed-point implementation in direct 2d:\n");
+        run_dct(data, width, height, dct_loeffler_2d_fixed);
     }
 }
