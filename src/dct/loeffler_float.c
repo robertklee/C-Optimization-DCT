@@ -2,7 +2,7 @@
 #include "util/constants.h"
 #include "util/round.h"
 
-void transpose(double data[8][8])
+void transpose_double(double data[8][8])
 {
     for (int i = 0; i < 8; ++i) {
         for (int j = i + 1; j < 8; ++j) {
@@ -25,7 +25,7 @@ void transpose(double data[8][8])
 #define c6_b (-1.84775906502257351225636637879357657364483325172728497223) // sqrt(2) * -(sin(6pi/16) + cos(6pi/16))
 #define c6_c (0.541196100146196984399723205366389420061072063378015444681) // sqrt(2) * cos(6pi/16)
 
-void dct_1d(const double data_in[8], double data_out[8], uint8_t firstPass)
+void dct_1d_float(const double data_in[8], double data_out[8], uint8_t firstPass)
 {
     // STAGE 1
     double stage1out[8];
@@ -129,16 +129,16 @@ void dct_loeffler_float(const uint8_t data_in[8][8], int16_t data_out[8][8])
 
     // Do 1D for each row, put outputs into the row.
     for (int k = 0; k < 8; ++k) {
-        dct_1d(tmp_io[k], tmp[k], 1);
+        dct_1d_float(tmp_io[k], tmp[k], 1);
     }
     // Then, do 1D for each column, put outputs into the column.
     // transpose so that indexing by row actually indexes by column
-    transpose(tmp);
+    transpose_double(tmp);
     for (int k = 0; k < 8; ++k) {
-        dct_1d(tmp[k], tmp_io[k], 0);
+        dct_1d_float(tmp[k], tmp_io[k], 0);
     }
     // transpose back out so that columns are now actually columns
-    transpose(tmp_io);
+    transpose_double(tmp_io);
 
     for (int i = 0; i < 8; ++i) {
         for (int j = 0; j < 8; ++j) {

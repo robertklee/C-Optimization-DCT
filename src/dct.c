@@ -70,13 +70,14 @@ void dct(uint8_t *data, long width, long height, ExecutionMode executionMode)
         run_dct(data, width, height, dct_twostep_slow);
     }
     
-    if (executionMode == LOUFFLER_FLOAT || executionMode == ALL) {
+    if (executionMode == LOEFFLER_FLOAT || executionMode == ALL) {
         // Third: loeffler floating-point implementation
         printf("\nLoeffler floating-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_float);
     }
     
-    if (executionMode == LOUFFLER_FIXED || executionMode == ALL) {
+    if (executionMode == LOEFFLER_FIXED || executionMode == ALL) {
+        // Fourth: loeffler fixed-point implementation
         printf("\nLoeffler fixed-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_fixed);
     }
