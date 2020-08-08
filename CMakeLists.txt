@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 project(seng440 LANGUAGES C)
 
@@ -15,7 +15,8 @@ add_executable(dct
                ${PROJECT_SOURCE_DIR}/src/util/helpers.c
                )
 target_include_directories(dct PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
+add_compile_definitions(DCT_PRECISION=${DCT_PRECISION})
+set_target_properties(dct PROPERTIES COMPILE_FLAGS "-save-temps -O3")
 
 # List cmake properties (for debugging)
 if (DEBUG_CMAKE)

@@ -78,7 +78,12 @@ uint8_t* read_file(const char * const filepath_arg, unsigned long width, unsigne
     }
 
     // Load file data
-    fread(image_dataptr, sizeof(uint8_t), count, image_fptr);
+    size_t bytes_read = fread(image_dataptr, sizeof(uint8_t), count, image_fptr);
+    if (bytes_read != sizeof(uint8_t) * count)
+    {
+        printf("File size not as specified.\n");
+        exit(-1);
+    }
 
     // Close input file
     fclose(image_fptr);
