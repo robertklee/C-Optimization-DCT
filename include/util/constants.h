@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <stdint.h>
+
 #define PI                  3.141592653589793
 #define SQRT_2              1.414213562373095048801688724209698078569671875376948073176
 #define SQRT_2_INV          0.707106781186547524400844362104849039284835937688474036588
@@ -24,5 +26,7 @@ typedef enum {
     kInt,
     kDouble
 } ElementType;
+
+typedef uint8_t DataType;
 
 #endif // CONSTANTS_H
