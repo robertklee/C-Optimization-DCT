@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     uint8_t* image_dataptr = read_file(filepath_arg, width, height);
 
     // Perform DCT on loaded data
-    dct((uint8_t*) image_dataptr, width, height, executionMode);
+    dct((DataType*) image_dataptr, width, height, executionMode);
 
     // Free memory
     free(image_dataptr);
