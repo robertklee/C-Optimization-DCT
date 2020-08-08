@@ -16,4 +16,13 @@ typedef enum {
     LOEFFLER_2D_FIXED
 } ExecutionMode;
 
+typedef enum {
+    kUint8 = 0,
+    kUint16,
+    kInt8,
+    kInt16,
+    kInt,
+    kDouble
+} ElementType;
+
 #endif // CONSTANTS_H
