@@ -15,9 +15,15 @@ int main(int argc, char** argv)
     read_arguments(argc, argv, &filepath_arg, &width, &height, &executionMode);
 
     uint8_t* image_dataptr = read_file(filepath_arg, width, height);
+    
+#ifdef LEVEL_OFF_ACTIVE
+    DataType* input_dataptr = JPG_level_off(image_dataptr, width, height);
+#else
+    DataType* input_dataptr = (DataType*) image_dataptr;
+#endif
 
     // Perform DCT on loaded data
-    dct((DataType*) image_dataptr, width, height, executionMode);
+    dct((DataType*) input_dataptr, width, height, executionMode);
 
     // Free memory
     free(image_dataptr);
