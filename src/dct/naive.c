@@ -42,7 +42,7 @@ const double cos_lookup[32] =
 
 // input: 8x8 array, output: 8x8 array.
 // only optimization is the cosine lookup table.
-void dct_naive(const uint8_t data_in[8][8], int16_t data_out[8][8])
+void dct_naive(const DataType data_in[8][8], int16_t data_out[8][8])
 {
     // X(u,v) = (C(u)/2)*(C(v)/2) * sigma[i=0 to 7]( sigma[j=0 to 7]( x(i,j)*cos((2i+1)*u*pi/16)*cos((2j+1)*v*pi/16) ) )
     for (int u = 0; u < 8; ++u)

@@ -94,7 +94,7 @@ void dct_1d_fixed(int32_t data[8])
     data[1] = tmp_val; // restore from temp
 }
 
-void dct_loeffler_fixed(const uint8_t data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_fixed(const DataType data_in[8][8], int16_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     int32_t tmp[8][8];

@@ -116,7 +116,7 @@ void dct_1d_float(const double data_in[8], double data_out[8], uint8_t firstPass
     }
 }
 
-void dct_loeffler_float(const uint8_t data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_float(const DataType data_in[8][8], int16_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
