@@ -27,6 +27,16 @@ typedef enum {
     kDouble
 } ElementType;
 
+// A flag to specify whether we are working with a level-off input. 
+// Comment out if we want to use unsigned
+#define LEVEL_OFF_ACTIVE
+
+// Conditionally set the type as int8_t or uint8_t depending on if we are performing
+// level off [-128,127] or not [0,255]
+#ifdef LEVEL_OFF_ACTIVE
+typedef int8_t DataType;
+#else
 typedef uint8_t DataType;
+#endif // LEVEL_OFF_ACTIVE
 
 #endif // CONSTANTS_H
