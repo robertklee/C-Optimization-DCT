@@ -128,7 +128,7 @@ void dct_2d_fixed(compute_t data[8][8])
     }
 }
 
-void dct_loeffler_2d_fixed(const uint8_t data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_2d_fixed(const DataType data_in[8][8], int16_t data_out[8][8])
 {
     // [X] = [C] * [x] * [C]^T
     compute_t tmp[8][8];
