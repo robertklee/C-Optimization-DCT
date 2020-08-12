@@ -9,11 +9,11 @@
 #define ROUND_NEAREST       0.5
 
 // DCT_PRECISION: How many bits for each scaling factor. This must be at most 10.
-#if DCT_PRECISION != 10 && DCT_PRECISION != 8 && DCT_PRECISION != 7 && DCT_PRECISION != 4
+#if DCT_PRECISION != 10 && DCT_PRECISION != 8 && DCT_PRECISION != 7 && DCT_PRECISION != 6 && DCT_PRECISION != 4
 #ifdef DCT_PRECISION
 #undef DCT_PRECISION
 #endif
-#define DCT_PRECISION (7)
+#define DCT_PRECISION (6)
 #endif
 
 #if DCT_PRECISION == 10
@@ -29,7 +29,7 @@
 #define C6_3 (-1892)    // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
 // Related DCT constants
 #define DCT_RT2_PRECISION (10)
-#define FIXEDRT2 (1448) // sqrt(2)
+#define DCT_RT2 (1448) // sqrt(2)
 #define DCT_ROUND_VAL (512)     // 1 << (DCT_PRECISION - 1)
 #define DCT_RT2_ROUND_VAL (512) // 1 << (DCT_RT2_PRECISION - 1)
 
@@ -46,7 +46,7 @@
 #define C6_3 (-473)     // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
 // Related DCT constants
 #define DCT_RT2_PRECISION (7)
-#define FIXEDRT2 (181)  // sqrt(2)
+#define DCT_RT2 (181)  // sqrt(2)
 #define DCT_ROUND_VAL (128)     // 1 << (DCT_PRECISION - 1)
 #define DCT_RT2_ROUND_VAL (64)  // 1 << (DCT_RT2_PRECISION - 1)
 
@@ -63,9 +63,26 @@
 #define C6_3 (-237)     // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
 // Related DCT constants
 #define DCT_RT2_PRECISION (6)
-#define FIXEDRT2 (91)   // sqrt(2)
+#define DCT_RT2 (91)   // sqrt(2)
 #define DCT_ROUND_VAL (64)      // 1 << (DCT_PRECISION - 1)
 #define DCT_RT2_ROUND_VAL (32)  // 1 << (DCT_RT2_PRECISION - 1)
+
+#elif DCT_PRECISION == 6
+// Butterfly constants
+#define C1_1 (63)       // cos(pi/16)
+#define C1_2 (-50)      // sin(pi/16) - cos(pi/16)
+#define C1_3 (-75)      // -sin(pi/16) - cos(pi/16)
+#define C3_1 (53)       // cos(3pi/16)
+#define C3_2 (-18)      // sin(3pi/16) - cos(3pi/16)
+#define C3_3 (-89)      // -sin(3pi/16) - cos(3pi/16)
+#define C6_1 (35)       // sqrt(2) * (cos(6pi/16))
+#define C6_2 (49)       // sqrt(2) * (sin(6pi/16) - cos(6pi/16))
+#define C6_3 (-118)     // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
+// Related DCT constants
+#define DCT_RT2_PRECISION (5)
+#define DCT_RT2 (45)   // sqrt(2)
+#define DCT_ROUND_VAL (32)      // 1 << (DCT_PRECISION - 1)
+#define DCT_RT2_ROUND_VAL (16)  // 1 << (DCT_RT2_PRECISION - 1)
 
 #elif DCT_PRECISION == 4
 // Butterfly constants
@@ -80,7 +97,7 @@
 #define C6_3 (-30)      // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
 // Related DCT constants
 #define DCT_RT2_PRECISION (4)
-#define FIXEDRT2 (23)   // sqrt(2)
+#define DCT_RT2 (23)   // sqrt(2)
 #define DCT_ROUND_VAL (64)      // 1 << (DCT_PRECISION - 1)
 #define DCT_RT2_ROUND_VAL (32)  // 1 << (DCT_RT2_PRECISION - 1)
 
