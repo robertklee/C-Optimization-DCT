@@ -101,8 +101,9 @@ int8_t* JPG_level_off(uint8_t* in, unsigned long width, unsigned long height)
     void *ptr = malloc(sizeof(int8_t) * count);
     
     int8_t* out = (int8_t*) ptr;
-    
-    for (size_t i = 0; i < count; i++) {
+
+    size_t i;
+    for (i = 0; i < count; i++) {
         out[i] = in[i] - level_off;
     }
     

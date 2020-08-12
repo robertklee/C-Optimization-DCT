@@ -7,9 +7,9 @@ typedef int16_t compute_t;
 
 // requires extra bits: DCT_PRECISION + 2. should the DCT_PRECISION bits be rounded away before returning?
 // TODO: handle overflow
-static void butterfly(compute_t top, compute_t bot, uint8_t type, compute_t *top_out, compute_t *bot_out)
+static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
 {
-    compute_t tmp_sum, tmp_top;
+    compute_t tmp_sum;
     switch (type)
     {
     case 1:
@@ -17,19 +17,16 @@ static void butterfly(compute_t top, compute_t bot, uint8_t type, compute_t *top
         *top_out = (C1_2 * bot) + tmp_sum;
         *bot_out = (C1_3 * top) + tmp_sum; // caps at (255 * 127) + (127 * 255) = 15-bit + 15-bit = 16-bit --> adding DCT_PRECISION + 2
         break;
-        /*
     case 3:
-        tmp_sum = C3_1 * ((*top) + (*bot));
-        tmp_top = C3_2 * (*bot) + tmp_sum;
-        *bot = C3_3 * (*top) + tmp_sum;
-        *top = tmp_top;
+        tmp_sum = C3_1 * (top + bot);
+        *top_out = (C3_2 * bot) + tmp_sum;
+        *bot_out = (C3_3 * top) + tmp_sum;
         break;
     case 6:
-        tmp_sum = C6_1 * ((*top) + (*bot));
-        tmp_top = C6_2 * (*bot) + tmp_sum;
-        *bot = C6_3 * (*top) + tmp_sum;
-        *top = tmp_top;
-        break;*/
+        tmp_sum = C6_1 * (top + bot);
+        *top_out = (C6_2 * bot) + tmp_sum;
+        *bot_out = (C6_3 * top) + tmp_sum;
+        break;
     }
 }
 
@@ -61,8 +58,8 @@ void dct_2d_fixed(compute_t data[8][8])
         data[i][0] = data[i][0] - data[i][1]; // actually out[2]
         // these values are 9-bit + 1 sign bit
         // bottom four:
-        //butterfly(&(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
-        //butterfly(&(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
+        butterfly(data[i][5], data[i][6], &(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
+        butterfly(data[i][4], data[i][7], &(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 10-bit + DCT_PRECISION + 1 sign bit
 
         // STAGE 3
@@ -70,7 +67,7 @@ void dct_2d_fixed(compute_t data[8][8])
         data[i][1] = data[i][3] + data[i][2]; // actually out[0]
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
         // these values are 10-bit + 1 sign bit
-        butterfly(data[i][0], temp_value, 6, &(data[i][0]), &temp_value); // R2C6 rotator: actually results in out[2] and out[3]
+        butterfly(data[i][0], temp_value, &(data[i][0]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
         // these values are 11-bit + DCT_PRECISION + 1 sign bit
         // bottom four:
         data[i][2] = data[i][7] - data[i][5]; // actually out[5]
@@ -116,8 +113,8 @@ void dct_2d_fixed(compute_t data[8][8])
         data[0][i] = data[0][i] - data[1][i]; // actually out[2]
         // these values are 14 bit + 1 sign bit
         // bottom four:
-        //butterfly(&(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
-        //butterfly(&(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
+        butterfly(data[5][i], data[6][i], &(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
+        butterfly(data[4][i], data[7][i], &(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 15 bit + DCT_PRECISION + 1 sign bit
 
         // STAGE 3
@@ -125,7 +122,7 @@ void dct_2d_fixed(compute_t data[8][8])
         data[1][i] = data[3][i] + data[2][i]; // actually out[0]
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
         // these values are 15 bit + 1 sign bit
-        //butterfly(&(data[0][i]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
+        butterfly(data[0][i], temp_value, &(data[0][i]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
         // these values are 16 bit + DCT_PRECISION + 1 sign bit
         // bottom four:
         data[2][i] = data[7][i] - data[5][i]; // actually out[5]
