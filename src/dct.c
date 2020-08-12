@@ -14,13 +14,14 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(con
 {
     long width_strides = width / 8;
     long height_strides = height / 8;
-    for (int i = 0; i < height_strides; ++i) {
-        for (int j = 0; j < width_strides; ++j) {
+    int i, j, k, l;
+    for (i = 0; i < height_strides; ++i) {
+        for (j = 0; j < width_strides; ++j) {
             DataType image_region[8][8];
             int16_t dct_output_region[8][8];
             // copy image into tmp
-            for (int k = 0; k < 8; ++k) {
-                for (int l = 0; l < 8; ++l) {
+            for (k = 0; k < 8; ++k) {
+                for (l = 0; l < 8; ++l) {
                     int index = ((i * 8) + k) * width + ((j * 8) + l);
                     image_region[k][l] = data[index];
                 }
@@ -29,8 +30,8 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(con
             (*dct_func)(image_region, dct_output_region);
             // print it out
             printf("Region %d:\n", i * j);
-            for (int l = 0; l < 8; ++l) {
-                print_line(dct_output_region[l], kUint16);
+            for (k = 0; k < 8; ++k) {
+                print_line(dct_output_region[k], kUint16);
             }
         }
     }
@@ -40,8 +41,9 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(con
 // of using run_dct to print out the input in the same way it prints out the output.
 void copy_data(const DataType data_in[8][8], int16_t data_out[8][8])
 {
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    int i, j;
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             data_out[i][j] = data_in[i][j];
         }
     }
