@@ -12,7 +12,7 @@
 
 // matrix-multiply this on the left to get X[0, 1, 2, 3, 4, 5, 6, 7] for each row
 // on the right: x[0, 1, 2, 3, 4, 5, 6, 7]
-const double twostep_slow_C[8][8] =
+static double twostep_slow_C[8][8] =
 {
     {c4,  c4,  c4,  c4,  c4,  c4,  c4,  c4},
     {c1,  c3,  c5,  c7, -c7, -c5, -c3, -c1},
@@ -25,7 +25,7 @@ const double twostep_slow_C[8][8] =
 };
 // matrix-multiply this on the right to get X[0, 1, 2, 3, 4, 5, 6, 7] for each column
 // on the left: x[0, 1, 2, 3, 4, 5, 6, 7]
-const double twostep_slow_CT[8][8] =
+static double twostep_slow_CT[8][8] =
 {
     {c4,  c1,  c2,  c3,  c4,  c5,  c6,  c7},
     {c4,  c3,  c6, -c7, -c4, -c1, -c2, -c5},
@@ -40,7 +40,7 @@ const double twostep_slow_CT[8][8] =
 // TODO: This could be made more efficient by having one function for each step,
 //       allowing us to optimize array access to always be row-first indexing.
 // preconditions: lhs != out and rhs != out (lhs == rhs OK)
-void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], double out[8][8])
+void square_matrix_multiply(double lhs[8][8], double rhs[8][8], double out[8][8])
 {
     int i, j, k;
     for (i = 0; i < 8; ++i) {
