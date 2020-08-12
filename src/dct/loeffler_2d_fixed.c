@@ -13,9 +13,9 @@ static void butterfly(compute_t *top, compute_t *bot, uint8_t type)
     switch (type)
     {
     case 1:
-        tmp_sum = C1_1 * ((*top) + (*bot));
+        tmp_sum = C1_1 * ((*top) + (*bot)); // caps at 127 * 255 (7-bit * 8-bit) = 15 bit
         tmp_top = C1_2 * (*bot) + tmp_sum;
-        *bot = C1_3 * (*top) + tmp_sum;
+        *bot = C1_3 * (*top) + tmp_sum; // caps at (255 * 127) + (127 * 255) = 15-bit + 15-bit = 16-bit --> adding DCT_PRECISION + 2
         *top = tmp_top;
         break;
     case 3:
@@ -152,18 +152,19 @@ void dct_2d_fixed(compute_t data[8][8])
 
 void dct_loeffler_2d_fixed(const DataType data_in[8][8], int16_t data_out[8][8])
 {
+    int i, j;
     // [X] = [C] * [x] * [C]^T
     compute_t tmp[8][8];
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             tmp[i][j] = data_in[i][j];
         }
     }
 
     dct_2d_fixed(tmp);
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             data_out[i][j] = (int16_t) ((tmp[i][j] + (1<<2)) >> 3); // round to nearest and divide by 8 to account for C(u) factors
         }
     }

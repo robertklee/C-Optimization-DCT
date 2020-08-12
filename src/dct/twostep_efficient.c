@@ -40,13 +40,14 @@ const double twostep_efficient_CT[8][8] =
 
 void twostep_efficient_secondstep_2d(double x_in[8], double x_out[8], double coeffs[8][8])
 {
+    int i, j;
     // TODO: finish this
-    for (int i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i) {
         int ind_hi = i << 1;
         int ind_lo = ind_hi + 1;
         x_out[ind_hi] = 0;
         x_out[ind_lo] = 0;
-        for (int j = 0; j < 4; ++j) {
+        for (j = 0; j < 4; ++j) {
             //x_out[ind_hi] += what?
         }
     }
@@ -56,13 +57,14 @@ void twostep_efficient_secondstep_2d(double x_in[8], double x_out[8], double coe
 // x_in = [x0+x7, x1+x6, x2+x5, x3+x4, x0-x7, x1-x6, x2-x5, x3-x4]
 void twostep_efficient_firststep_1d(double x_in[8], double x_out[8], double coeffs[8][8])
 {
+    int i, j;
     // TODO: finish this
-    for (int i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i) {
         int ind_hi = i << 1;
         int ind_lo = ind_hi + 1;
         x_out[ind_hi] = 0;
         x_out[ind_lo] = 0;
-        for (int j = 0; j < 4; ++j) {
+        for (j = 0; j < 4; ++j) {
             x_out[ind_hi] += coeffs[i][j] * x_in[j];
             x_out[ind_lo] += coeffs[i+4][j+4] * x_in[j+4];
         }
@@ -70,19 +72,20 @@ void twostep_efficient_firststep_1d(double x_in[8], double x_out[8], double coef
 
 }
 
-void dct_twostep_efficient(const uint8_t data_in[8][8], uint8_t data_out[8][8])
+void dct_twostep_efficient(uint8_t data_in[8][8], uint8_t data_out[8][8])
 {
+    int i, j;
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             tmp_io[i][j] = data_in[i][j];
         }
     }
     double tmp[8][8];
 
     // TODO: figure out what happened to the 1/4 factor at the front - is it necessary (seems to be, but unclear)?
-    for (int i = 0; i < 8; ++i) {
+    for (i = 0; i < 8; ++i) {
         //twostep_efficient_firststep_1d(tmp_io[i], tmp[i], twostep_efficient_C);
         double tmp_x[8] = { tmp_io[0][i] + tmp_io[7][i],
                             tmp_io[1][i] + tmp_io[6][i],
@@ -94,13 +97,13 @@ void dct_twostep_efficient(const uint8_t data_in[8][8], uint8_t data_out[8][8])
                             tmp_io[3][i] - tmp_io[4][i] };
         // TODO: finish this
     }
-    for (int j = 0; j < 8; ++j) {
+    for (j = 0; j < 8; ++j) {
         // TODO: finish this
         //twostep_efficient_secondstep_1d()
     }
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
             data_out[i][j] = (uint8_t) tmp_io[i][j];
         }

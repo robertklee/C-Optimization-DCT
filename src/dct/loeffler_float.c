@@ -4,8 +4,9 @@
 
 void transpose_double(double data[8][8])
 {
-    for (int i = 0; i < 8; ++i) {
-        for (int j = i + 1; j < 8; ++j) {
+    int i, j;
+    for (i = 0; i < 8; ++i) {
+        for (j = i + 1; j < 8; ++j) {
             double tmp = data[i][j];
             data[i][j] = data[j][i];
             data[j][i] = tmp;
@@ -116,32 +117,33 @@ void dct_1d_float(const double data_in[8], double data_out[8], uint8_t firstPass
     }
 }
 
-void dct_loeffler_float(const DataType data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_float(DataType data_in[8][8], int16_t data_out[8][8])
 {
+    int i, j, k;
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             tmp_io[i][j] = data_in[i][j];
         }
     }
     double tmp[8][8];
 
     // Do 1D for each row, put outputs into the row.
-    for (int k = 0; k < 8; ++k) {
+    for (k = 0; k < 8; ++k) {
         dct_1d_float(tmp_io[k], tmp[k], 1);
     }
     // Then, do 1D for each column, put outputs into the column.
     // transpose so that indexing by row actually indexes by column
     transpose_double(tmp);
-    for (int k = 0; k < 8; ++k) {
+    for (k = 0; k < 8; ++k) {
         dct_1d_float(tmp[k], tmp_io[k], 0);
     }
     // transpose back out so that columns are now actually columns
     transpose_double(tmp_io);
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
             data_out[i][j] = ROUND_INT16(tmp_io[i][j]);
         }

@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 #endif
 
     // Perform DCT on loaded data
-    dct((DataType*) input_dataptr, width, height, executionMode);
+    dct(input_dataptr, width, height, executionMode);
 
     // Free memory
     free(image_dataptr);

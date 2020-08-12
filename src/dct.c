@@ -10,7 +10,7 @@
 #include "dct/loeffler_fixed.h"
 #include "dct/loeffler_2d_fixed.h"
 
-void run_dct(const DataType *data, long width, long height, void (*dct_func)(const DataType[8][8], int16_t[8][8]) )
+void run_dct(const DataType *data, long width, long height, void (*dct_func)(DataType[8][8], int16_t[8][8]) )
 {
     long width_strides = width / 8;
     long height_strides = height / 8;
@@ -39,7 +39,7 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(con
 
 // Do-nothing function that just copies input to output. This is only useful as a way
 // of using run_dct to print out the input in the same way it prints out the output.
-void copy_data(const DataType data_in[8][8], int16_t data_out[8][8])
+void copy_data(DataType data_in[8][8], int16_t data_out[8][8])
 {
     int i, j;
     for (i = 0; i < 8; ++i) {
