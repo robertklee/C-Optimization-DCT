@@ -13,7 +13,7 @@
 #ifdef DCT_PRECISION
 #undef DCT_PRECISION
 #endif
-#define DCT_PRECISION (6)
+#define DCT_PRECISION (7)
 #endif
 
 #if DCT_PRECISION == 10
