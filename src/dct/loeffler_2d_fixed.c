@@ -2,14 +2,11 @@
 
 #include "util/constants.h"
 
-#include "util/helpers.h"
-#include <stdio.h>
-
 // compute_t: Type used for computation.
 typedef int16_t compute_t;
 
 // requires 1 extra bit. requires DCT_PRECISION extra bits to be available.
-// therefore, for compute_t = int16_t and DCT_PRECISION = 7, the inputs must be 7 bits. 
+// therefore, for compute_t = int16_t and DCT_PRECISION = 7, the inputs must be 7 bits.
 static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
 {
     int32_t tmp_sum;
@@ -38,11 +35,8 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
     compute_t temp_value; // extra temporary value
     uint8_t i;
     // Perform on rows
-    printf("First round:\n");
     for (i = 0; i < 8; ++i)
     {
-        printf("\nRow %d\n", i);
-        print_line(data[i], kInt16);
         // values are 7-bit + 1 sign bit
 
         // STAGE 1
@@ -56,8 +50,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][4] = data_in[i][3] - data_in[i][4]; // actually out[4]
         // values are 8-bit + 1 sign bit
 
-        print_line(data[i], kInt16);
-
         // STAGE 2
         // top four:
         data[i][3] = temp_value + data[i][2]; // actually out[0]
@@ -68,8 +60,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         butterfly(data[i][5], data[i][6], &(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[i][4], data[i][7], &(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 9-bit + 1 sign bit
-
-        print_line(data[i], kInt16);
 
         // STAGE 3
         // top four:
@@ -83,8 +73,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][4] = data[i][4] + data[i][6]; // actually out[4]
         // these values are 10-bit + 1 sign bit
 
-        print_line(data[i], kInt16);
-
         // STAGE 4
         data[i][5] = DCT_RT2 * data[i][5] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION; // x[6] -> X[5]
         data[i][6] = temp_value; // x[3] -> X[6]
@@ -96,22 +84,11 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][0] = data[i][1]; // x[0] -> X[0]
         data[i][1] = temp_value; // restore from temp
         // these values are at most 10-bit + 1 sign bit
-
-        print_line(data[i], kInt16);
     }
-
-    printf("\nAfter first round:\n");
-    for (i = 0; i < 8; ++i)
-        print_line(data[i], kInt16);
-
-    printf("\nSecond round:\n");
 
     // Perform on cols
     for (i = 0; i < 8; ++i)
     {
-        printf("\nCol %d\n", i);
-        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
-        data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
         // assume input values are at most 10-bit + 1 sign bit
 
         // STAGE 1
@@ -125,9 +102,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[4][i] = data[3][i] - data[4][i]; // actually out[4]
         // values are 11 bit + 1 sign bit
 
-        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
-                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
-
         // STAGE 2
         // top four:
         data[3][i] = temp_value + data[2][i]; // actually out[0]
@@ -138,9 +112,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         butterfly(data[5][i], data[6][i], &(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[4][i], data[7][i], &(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 12 bit + 1 sign bit
-
-        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
-                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
 
         // STAGE 3
         // top four:
@@ -154,9 +125,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[4][i] = data[4][i] + data[6][i]; // actually out[4]
         // these values are 13 bit + 1 sign bit
 
-        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
-                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
-
         // STAGE 4
         data[5][i] = (DCT_RT2 * (data[5][i] + (1 << 2) >> 3) + DCT_RT2_ROUND_VAL) >> DCT_RT2_PRECISION; // x[6] -> X[5]
         data[6][i] = (temp_value + (1<<2)) >> 3; // x[3] -> X[6]
@@ -169,15 +137,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[1][i] = temp_value; // restore from temp
         // these values are at most 13 bit + 1 sign bit before dividing.
         // dividing by 8 results in 10 bit + 1 sign bit.
-
-        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
-                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
-    }
-
-    printf("\nFinal result:\n");
-    for (int k = 0; k < 8; ++k)
-    {
-        print_line(data[k], kInt16);
     }
 }
 
@@ -190,11 +149,11 @@ void dct_loeffler_2d_fixed(DataType data_in[8][8], int16_t data_out[8][8])
 // DONE 16 bit interim values (shift before multiply by sqrt_2 - possibly use only 7 bits for sqrt 2, 9 bits for others?)
 // DONE 7 bit scale factors - otherwise we run out of bits within 16. this is done, but needs some fixing.
 // DONE correct rounding before shifting (add to smallest shifted-out bit before shifting)
-// finish fixing 16 bit interim values
+// DONE finish fixing 16 bit interim values - now cast to 32 bit before multiplying, and cast back afterwards
 // DONE remove temporary array copy
-// fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
+// DONE fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
 // is implementation-defined for signed inputs. consequently, our shift operations produce undefined behaviour. we'll need to check
-// with the arm-linux-gcc compiler to determine which is used.
+// with the arm-linux-gcc compiler to determine which is used. -> asr (arithmetic shift right) is correctly used.
 //
 // DONE merge various branches into master to combine these things
 // DONE (install recent git & cmake on seng440.ece.uvic.ca)
