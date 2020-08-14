@@ -2,13 +2,17 @@
 
 #include "util/constants.h"
 
+#include "util/helpers.h"
+#include <stdio.h>
+
 // compute_t: Type used for computation.
 typedef int16_t compute_t;
 
 // requires 1 extra bit. requires DCT_PRECISION extra bits to be available.
-static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
+// therefore, for compute_t = int16_t and DCT_PRECISION = 7, the inputs must be 7 bits. 
+static void butterfly(int32_t top, int32_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
 {
-    compute_t tmp_sum;
+    int32_t tmp_sum;
     switch (type)
     {
     case 1:
@@ -17,7 +21,14 @@ static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_
         *bot_out = ((C1_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     case 3:
+        // -4 and 480 enter here
+        // 262 and 401 come out of 32-bit
+        // -249 and -112 come out of 16-bit: clearly overflow
+        // recall overflow occurs past +/-32767
         tmp_sum = C3_1 * (top + bot);
+        // tmp_sum = 106 * 476 = 50456: overflow!
+        // tmp_sum = 6A * 1DC = C518
+        // tmp_sum = 0110 1010 * 0001 1101 1100 (7 * 9 bits)
         *top_out = ((C3_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         *bot_out = ((C3_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
@@ -34,8 +45,11 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
     compute_t temp_value; // extra temporary value
     uint8_t i;
     // Perform on rows
+    printf("First round:\n");
     for (i = 0; i < 8; ++i)
     {
+        printf("\nRow %d\n", i);
+        print_line(data[i], kInt16);
         // values are 7-bit + 1 sign bit
 
         // STAGE 1
@@ -49,6 +63,8 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][4] = data_in[i][3] - data_in[i][4]; // actually out[4]
         // values are 8-bit + 1 sign bit
 
+        print_line(data[i], kInt16);
+
         // STAGE 2
         // top four:
         data[i][3] = temp_value + data[i][2]; // actually out[0]
@@ -59,6 +75,8 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         butterfly(data[i][5], data[i][6], &(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[i][4], data[i][7], &(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 9-bit + 1 sign bit
+
+        print_line(data[i], kInt16);
 
         // STAGE 3
         // top four:
@@ -72,6 +90,8 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][4] = data[i][4] + data[i][6]; // actually out[4]
         // these values are 10-bit + 1 sign bit
 
+        print_line(data[i], kInt16);
+
         // STAGE 4
         data[i][5] = DCT_RT2 * data[i][5] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION; // x[6] -> X[5]
         data[i][6] = temp_value; // x[3] -> X[6]
@@ -83,11 +103,22 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[i][0] = data[i][1]; // x[0] -> X[0]
         data[i][1] = temp_value; // restore from temp
         // these values are at most 10-bit + 1 sign bit
+
+        print_line(data[i], kInt16);
     }
+
+    printf("\nAfter first round:\n");
+    for (i = 0; i < 8; ++i)
+        print_line(data[i], kInt16);
+
+    printf("\nSecond round:\n");
 
     // Perform on cols
     for (i = 0; i < 8; ++i)
     {
+        printf("\nCol %d\n", i);
+        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
+        data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
         // assume input values are at most 10-bit + 1 sign bit
 
         // STAGE 1
@@ -101,6 +132,9 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[4][i] = data[3][i] - data[4][i]; // actually out[4]
         // values are 11 bit + 1 sign bit
 
+        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
+                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
+
         // STAGE 2
         // top four:
         data[3][i] = temp_value + data[2][i]; // actually out[0]
@@ -111,6 +145,9 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         butterfly(data[5][i], data[6][i], &(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[4][i], data[7][i], &(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 12 bit + 1 sign bit
+
+        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
+                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
 
         // STAGE 3
         // top four:
@@ -124,6 +161,9 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[4][i] = data[4][i] + data[6][i]; // actually out[4]
         // these values are 13 bit + 1 sign bit
 
+        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
+                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
+
         // STAGE 4
         data[5][i] = ((DCT_RT2 * data[5][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[6] -> X[5]
         data[6][i] = (temp_value + (1<<2)) >> 3; // x[3] -> X[6]
@@ -133,10 +173,19 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[3][i] = ((DCT_RT2 * data[2][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[5] -> X[3]
         data[2][i] = (data[0][i] + (1<<2)) >> 3; // x[2] -> X[2]
         data[0][i] = (data[1][i] + (1<<2)) >> 3; // x[0] -> X[0]
-        data[1][i] = (temp_value + (1<<2)) >> 3; // restore from temp
+        data[1][i] = temp_value; // restore from temp
         // these values are at most 13 bit + 1 sign bit.
         // dividing by 8 results in 10 bit + 1 sign bit. So our results clearly fit into 16 bits, but the interim values need to
         // be massaged into such a small representation.
+
+        printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
+                data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
+    }
+
+    printf("\nFinal result:\n");
+    for (int k = 0; k < 8; ++k)
+    {
+        print_line(data[k], kInt16);
     }
 }
 

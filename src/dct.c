@@ -29,9 +29,9 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(Dat
             // Call dct function
             (*dct_func)(image_region, dct_output_region);
             // print it out
-            printf("Region %d:\n", i * j);
+            //printf("Region %d:\n", i * j);
             for (k = 0; k < 8; ++k) {
-                print_line(dct_output_region[k], kUint16);
+                //print_line(dct_output_region[k], kUint16);
             }
         }
     }

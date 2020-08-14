@@ -34,7 +34,7 @@ void print_line(const void* x, ElementType elementType)
         case kInt16:
         {
             const int16_t* m = (int16_t*) x;
-            printf("%04hx %04hx %04hx %04hx %04hx %04hx %04hx %04hx\n",
+            printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
                    m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7]);
             break;
         }
