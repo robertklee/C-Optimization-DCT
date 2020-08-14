@@ -29,9 +29,9 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(Dat
             // Call dct function
             (*dct_func)(image_region, dct_output_region);
             // print it out
-            printf("Region %d, %d:\n", i, j);
+//            printf("Region %d, %d:\n", i, j);
             for (k = 0; k < 8; ++k) {
-                print_line(dct_output_region[k], kUint16);
+//                print_line(dct_output_region[k], kUint16);
             }
         }
     }
@@ -58,36 +58,36 @@ void dct(DataType *data, long width, long height, ExecutionMode executionMode)
     } 
 
     // Print input (by using copy_data as the dct function parameter to run_dct)
-    printf("Input:\n");
+//    printf("Input:\n");
     run_dct(data, width, height, copy_data);
 
     if (executionMode == NAIVE || executionMode == ALL) {
         // First: naive implementation
-        printf("\nNaive implementation:\n");
+//        printf("\nNaive implementation:\n");
         run_dct(data, width, height, dct_naive);
     }
 
     if (executionMode == TWO_STEP || executionMode == ALL) {
         // Second: twostep implementation
-        printf("\nTwo-step implementation:\n");
+//        printf("\nTwo-step implementation:\n");
         run_dct(data, width, height, dct_twostep_slow);
     }
     
     if (executionMode == LOEFFLER_FLOAT || executionMode == ALL) {
         // Third: loeffler floating-point implementation
-        printf("\nLoeffler floating-point implementation:\n");
+//        printf("\nLoeffler floating-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_float);
     }
     
     if (executionMode == LOEFFLER_FIXED || executionMode == ALL) {
         // Fourth: loeffler fixed-point implementation
-        printf("\nLoeffler fixed-point implementation:\n");
+//        printf("\nLoeffler fixed-point implementation:\n");
         run_dct(data, width, height, dct_loeffler_fixed);
     }
 
     if (executionMode == LOEFFLER_2D_FIXED || executionMode == ALL) {
         // Fifth: loeffler fixed-point implementation with direct 2d transform
-        printf("\nLoeffler fixed-point implementation in direct 2d:\n");
+//        printf("\nLoeffler fixed-point implementation in direct 2d:\n");
         run_dct(data, width, height, dct_loeffler_2d_fixed);
     }
 }
