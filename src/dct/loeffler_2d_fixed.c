@@ -165,18 +165,17 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
                 data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
 
         // STAGE 4
-        data[5][i] = ((DCT_RT2 * data[5][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[6] -> X[5]
+        data[5][i] = (DCT_RT2 * (data[5][i] + (1 << 2) >> 3) + DCT_RT2_ROUND_VAL) >> DCT_RT2_PRECISION; // x[6] -> X[5]
         data[6][i] = (temp_value + (1<<2)) >> 3; // x[3] -> X[6]
         temp_value = (data[7][i] + data[4][i] + (1<<2)) >> 3; // x[7] -> X[1] (store as temp due to dependencies)
         data[7][i] = (data[7][i] - data[4][i] + (1<<2)) >> 3; // x[4] -> X[7]
         data[4][i] = (data[3][i] + (1<<2)) >> 3; // x[1] -> X[4]
-        data[3][i] = ((DCT_RT2 * data[2][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[5] -> X[3]
+        data[3][i] = (DCT_RT2 * (data[2][i] + (1 << 2) >> 3) + DCT_RT2_ROUND_VAL) >> DCT_RT2_PRECISION; // x[5] -> X[3]
         data[2][i] = (data[0][i] + (1<<2)) >> 3; // x[2] -> X[2]
         data[0][i] = (data[1][i] + (1<<2)) >> 3; // x[0] -> X[0]
         data[1][i] = temp_value; // restore from temp
-        // these values are at most 13 bit + 1 sign bit.
-        // dividing by 8 results in 10 bit + 1 sign bit. So our results clearly fit into 16 bits, but the interim values need to
-        // be massaged into such a small representation.
+        // these values are at most 13 bit + 1 sign bit before dividing.
+        // dividing by 8 results in 10 bit + 1 sign bit.
 
         printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
                 data[0][i], data[1][i], data[2][i], data[3][i], data[4][i], data[5][i], data[6][i], data[7][i]);
