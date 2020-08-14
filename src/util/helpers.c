@@ -91,16 +91,14 @@ uint8_t* read_file(const char * const filepath_arg, unsigned long width, unsigne
     return (uint8_t*) image_dataptr;
 }
 
+// Performs level-off from 8-bit unsigned ints to 8-bit signed ints in-place.
 int8_t* JPG_level_off(uint8_t* in, unsigned long width, unsigned long height)
 {
     const uint8_t level_off = 128;
     
-    // Allocate memory for loading file data
     size_t count = width * height;
-    
-    void *ptr = malloc(sizeof(int8_t) * count);
-    
-    int8_t* out = (int8_t*) ptr;
+
+    int8_t* out = (int8_t*) in;
 
     size_t i;
     for (i = 0; i < count; i++) {
