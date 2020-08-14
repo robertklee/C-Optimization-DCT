@@ -133,7 +133,7 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         data[3][i] = ((DCT_RT2 * data[2][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[5] -> X[3]
         data[2][i] = (data[0][i] + (1<<2)) >> 3; // x[2] -> X[2]
         data[0][i] = (data[1][i] + (1<<2)) >> 3; // x[0] -> X[0]
-        data[1][i] = (temp_value + (1<<2)) >> 3; // restore from temp
+        data[1][i] = temp_value; // restore from temp
         // these values are at most 13 bit + 1 sign bit.
         // dividing by 8 results in 10 bit + 1 sign bit. So our results clearly fit into 16 bits, but the interim values need to
         // be massaged into such a small representation.
