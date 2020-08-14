@@ -10,32 +10,25 @@ typedef int16_t compute_t;
 
 // requires 1 extra bit. requires DCT_PRECISION extra bits to be available.
 // therefore, for compute_t = int16_t and DCT_PRECISION = 7, the inputs must be 7 bits. 
-static void butterfly(int32_t top, int32_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
+static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
 {
     int32_t tmp_sum;
     switch (type)
     {
     case 1:
-        tmp_sum = C1_1 * (top + bot);
-        *top_out = ((C1_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C1_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C1_1 * ((int32_t) top + (int32_t)  bot);
+        *top_out = ((C1_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C1_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     case 3:
-        // -4 and 480 enter here
-        // 262 and 401 come out of 32-bit
-        // -249 and -112 come out of 16-bit: clearly overflow
-        // recall overflow occurs past +/-32767
-        tmp_sum = C3_1 * (top + bot);
-        // tmp_sum = 106 * 476 = 50456: overflow!
-        // tmp_sum = 6A * 1DC = C518
-        // tmp_sum = 0110 1010 * 0001 1101 1100 (7 * 9 bits)
-        *top_out = ((C3_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C3_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C3_1 * ((int32_t) top + (int32_t) bot);
+        *top_out = ((C3_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C3_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     case 6:
-        tmp_sum = C6_1 * (top + bot);
-        *top_out = ((C6_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C6_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C6_1 * ((int32_t) top + (int32_t) bot);
+        *top_out = ((C6_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C6_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     }
 }
