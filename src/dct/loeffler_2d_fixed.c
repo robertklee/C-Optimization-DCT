@@ -6,25 +6,26 @@
 typedef int16_t compute_t;
 
 // requires 1 extra bit. requires DCT_PRECISION extra bits to be available.
+// therefore, for compute_t = int16_t and DCT_PRECISION = 7, the inputs must be 7 bits.
 static void butterfly(compute_t top, compute_t bot, compute_t *top_out, compute_t *bot_out, uint8_t type)
 {
-    compute_t tmp_sum;
+    int32_t tmp_sum;
     switch (type)
     {
     case 1:
-        tmp_sum = C1_1 * (top + bot);
-        *top_out = ((C1_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C1_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C1_1 * ((int32_t) top + (int32_t)  bot);
+        *top_out = ((C1_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C1_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     case 3:
-        tmp_sum = C3_1 * (top + bot);
-        *top_out = ((C3_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C3_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C3_1 * ((int32_t) top + (int32_t) bot);
+        *top_out = ((C3_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C3_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     case 6:
-        tmp_sum = C6_1 * (top + bot);
-        *top_out = ((C6_2 * bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
-        *bot_out = ((C6_3 * top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        tmp_sum = C6_1 * ((int32_t) top + (int32_t) bot);
+        *top_out = ((C6_2 * (int32_t) bot) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
+        *bot_out = ((C6_3 * (int32_t) top) + tmp_sum + DCT_ROUND_VAL) >> DCT_PRECISION;
         break;
     }
 }
@@ -125,18 +126,17 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         // these values are 13 bit + 1 sign bit
 
         // STAGE 4
-        data[5][i] = ((DCT_RT2 * data[5][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[6] -> X[5]
+        data[5][i] = (DCT_RT2 * (data[5][i] + (1 << 2) >> 3) + DCT_RT2_ROUND_VAL) >> DCT_RT2_PRECISION; // x[6] -> X[5]
         data[6][i] = (temp_value + (1<<2)) >> 3; // x[3] -> X[6]
         temp_value = (data[7][i] + data[4][i] + (1<<2)) >> 3; // x[7] -> X[1] (store as temp due to dependencies)
         data[7][i] = (data[7][i] - data[4][i] + (1<<2)) >> 3; // x[4] -> X[7]
         data[4][i] = (data[3][i] + (1<<2)) >> 3; // x[1] -> X[4]
-        data[3][i] = ((DCT_RT2 * data[2][i] + DCT_RT2_ROUND_VAL >> DCT_RT2_PRECISION) + (1<<2)) >> 3; // x[5] -> X[3]
+        data[3][i] = (DCT_RT2 * (data[2][i] + (1 << 2) >> 3) + DCT_RT2_ROUND_VAL) >> DCT_RT2_PRECISION; // x[5] -> X[3]
         data[2][i] = (data[0][i] + (1<<2)) >> 3; // x[2] -> X[2]
         data[0][i] = (data[1][i] + (1<<2)) >> 3; // x[0] -> X[0]
         data[1][i] = temp_value; // restore from temp
-        // these values are at most 13 bit + 1 sign bit.
-        // dividing by 8 results in 10 bit + 1 sign bit. So our results clearly fit into 16 bits, but the interim values need to
-        // be massaged into such a small representation.
+        // these values are at most 13 bit + 1 sign bit before dividing.
+        // dividing by 8 results in 10 bit + 1 sign bit.
     }
 }
 
@@ -149,11 +149,11 @@ void dct_loeffler_2d_fixed(DataType data_in[8][8], int16_t data_out[8][8])
 // DONE 16 bit interim values (shift before multiply by sqrt_2 - possibly use only 7 bits for sqrt 2, 9 bits for others?)
 // DONE 7 bit scale factors - otherwise we run out of bits within 16. this is done, but needs some fixing.
 // DONE correct rounding before shifting (add to smallest shifted-out bit before shifting)
-// finish fixing 16 bit interim values
+// DONE finish fixing 16 bit interim values - now cast to 32 bit before multiplying, and cast back afterwards
 // DONE remove temporary array copy
-// fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
+// DONE fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
 // is implementation-defined for signed inputs. consequently, our shift operations produce undefined behaviour. we'll need to check
-// with the arm-linux-gcc compiler to determine which is used.
+// with the arm-linux-gcc compiler to determine which is used. -> asr (arithmetic shift right) is correctly used.
 //
 // DONE merge various branches into master to combine these things
 // DONE (install recent git & cmake on seng440.ece.uvic.ca)

@@ -34,7 +34,7 @@ void print_line(const void* x, ElementType elementType)
         case kInt16:
         {
             const int16_t* m = (int16_t*) x;
-            printf("%04hx %04hx %04hx %04hx %04hx %04hx %04hx %04hx\n",
+            printf("%04d %04d %04d %04d %04d %04d %04d %04d\n",
                    m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7]);
             break;
         }
@@ -91,16 +91,14 @@ uint8_t* read_file(const char * const filepath_arg, unsigned long width, unsigne
     return (uint8_t*) image_dataptr;
 }
 
+// Performs level-off from 8-bit unsigned ints to 8-bit signed ints in-place.
 int8_t* JPG_level_off(uint8_t* in, unsigned long width, unsigned long height)
 {
     const uint8_t level_off = 128;
     
-    // Allocate memory for loading file data
     size_t count = width * height;
-    
-    void *ptr = malloc(sizeof(int8_t) * count);
-    
-    int8_t* out = (int8_t*) ptr;
+
+    int8_t* out = (int8_t*) in;
 
     size_t i;
     for (i = 0; i < count; i++) {

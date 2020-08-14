@@ -62,10 +62,10 @@
 #define C6_2 (98)       // sqrt(2) * (sin(6pi/16) - cos(6pi/16))
 #define C6_3 (-237)     // sqrt(2) * (-sin(6pi/16) - cos(6pi/16))
 // Related DCT constants
-#define DCT_RT2_PRECISION (6)
-#define DCT_RT2 (91)   // sqrt(2)
+#define DCT_RT2_PRECISION (5)
+#define DCT_RT2 (45)   // sqrt(2)
 #define DCT_ROUND_VAL (64)      // 1 << (DCT_PRECISION - 1)
-#define DCT_RT2_ROUND_VAL (32)  // 1 << (DCT_RT2_PRECISION - 1)
+#define DCT_RT2_ROUND_VAL (16)  // 1 << (DCT_RT2_PRECISION - 1)
 
 #elif DCT_PRECISION == 6
 // Butterfly constants

@@ -30,20 +30,20 @@ static void butterfly(int32_t *top, int32_t *bot, uint8_t type)
     {
     case 1:
         tmp_sum = c1_1 * ((*top) + (*bot));
-        tmp_top = c1_2 * (*bot) + tmp_sum;
-        *bot = c1_3 * (*top) + tmp_sum;
+        tmp_top = (c1_2 * (*bot) + tmp_sum) >> 10;
+        *bot = (c1_3 * (*top) + tmp_sum) >> 10;
         *top = tmp_top;
         break;
     case 3:
         tmp_sum = c3_1 * ((*top) + (*bot));
-        tmp_top = c3_2 * (*bot) + tmp_sum;
-        *bot = c3_3 * (*top) + tmp_sum;
+        tmp_top = (c3_2 * (*bot) + tmp_sum) >> 10;
+        *bot = (c3_3 * (*top) + tmp_sum) >> 10;
         *top = tmp_top;
         break;
     case 6:
         tmp_sum = c6_1 * ((*top) + (*bot));
-        tmp_top = c6_2 * (*bot) + tmp_sum;
-        *bot = c6_3 * (*top) + tmp_sum;
+        tmp_top = (c6_2 * (*bot) + tmp_sum) >> 10;
+        *bot = (c6_3 * (*top) + tmp_sum) >> 10;
         *top = tmp_top;
         break;
     }
@@ -84,13 +84,13 @@ void dct_1d_fixed(int32_t data[8])
     data[4] = data[4] + data[6]; // actually out[4]
 
     // STAGE 4
-    data[5] = sqrt2 * data[5] >> 20; // x[6] -> X[5]
-    data[6] = tmp_val >> 10; // x[3] -> X[6]
-    tmp_val = (data[7] + data[4]) >> 10; // x[7] -> X[1] (store as temp due to dependencies)
-    data[7] = (data[7] - data[4]) >> 10; // x[4] -> X[7]
+    data[5] = sqrt2 * data[5] >> 10; // x[6] -> X[5]
+    data[6] = tmp_val; // x[3] -> X[6]
+    tmp_val = (data[7] + data[4]); // x[7] -> X[1] (store as temp due to dependencies)
+    data[7] = (data[7] - data[4]); // x[4] -> X[7]
     data[4] = data[3]; // x[1] -> X[4]
-    data[3] = sqrt2 * data[2] >> 20; // x[5] -> X[3]
-    data[2] = data[0] >> 10; // x[2] -> X[2]
+    data[3] = sqrt2 * data[2] >> 10; // x[5] -> X[3]
+    data[2] = data[0]; // x[2] -> X[2]
     data[0] = data[1]; // x[0] -> X[0]
     data[1] = tmp_val; // restore from temp
 }
