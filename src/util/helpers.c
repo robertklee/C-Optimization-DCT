@@ -78,7 +78,12 @@ uint8_t* read_file(const char * const filepath_arg, unsigned long width, unsigne
     }
 
     // Load file data
-    fread(image_dataptr, sizeof(uint8_t), count, image_fptr);
+    size_t bytes_read = fread(image_dataptr, sizeof(uint8_t), count, image_fptr);
+    if (bytes_read != sizeof(uint8_t) * count)
+    {
+        printf("File size not as specified.\n");
+        exit(-1);
+    }
 
     // Close input file
     fclose(image_fptr);
@@ -96,8 +101,9 @@ int8_t* JPG_level_off(uint8_t* in, unsigned long width, unsigned long height)
     void *ptr = malloc(sizeof(int8_t) * count);
     
     int8_t* out = (int8_t*) ptr;
-    
-    for (size_t i = 0; i < count; i++) {
+
+    size_t i;
+    for (i = 0; i < count; i++) {
         out[i] = in[i] - level_off;
     }
     

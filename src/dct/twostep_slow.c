@@ -12,7 +12,7 @@
 
 // matrix-multiply this on the left to get X[0, 1, 2, 3, 4, 5, 6, 7] for each row
 // on the right: x[0, 1, 2, 3, 4, 5, 6, 7]
-const double twostep_slow_C[8][8] =
+static double twostep_slow_C[8][8] =
 {
     {c4,  c4,  c4,  c4,  c4,  c4,  c4,  c4},
     {c1,  c3,  c5,  c7, -c7, -c5, -c3, -c1},
@@ -25,7 +25,7 @@ const double twostep_slow_C[8][8] =
 };
 // matrix-multiply this on the right to get X[0, 1, 2, 3, 4, 5, 6, 7] for each column
 // on the left: x[0, 1, 2, 3, 4, 5, 6, 7]
-const double twostep_slow_CT[8][8] =
+static double twostep_slow_CT[8][8] =
 {
     {c4,  c1,  c2,  c3,  c4,  c5,  c6,  c7},
     {c4,  c3,  c6, -c7, -c4, -c1, -c2, -c5},
@@ -40,13 +40,14 @@ const double twostep_slow_CT[8][8] =
 // TODO: This could be made more efficient by having one function for each step,
 //       allowing us to optimize array access to always be row-first indexing.
 // preconditions: lhs != out and rhs != out (lhs == rhs OK)
-void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], double out[8][8])
+void square_matrix_multiply(double lhs[8][8], double rhs[8][8], double out[8][8])
 {
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    int i, j, k;
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             // for each element in output
             out[i][j] = 0;
-            for (int k = 0; k < 8; ++k) {
+            for (k = 0; k < 8; ++k) {
                 // lhs row * rhs column
                 out[i][j] += lhs[i][k] * rhs[k][j];
             }
@@ -56,12 +57,13 @@ void square_matrix_multiply(const double lhs[8][8], const double rhs[8][8], doub
 
 // input: 8x8 array, output: 8x8 array.
 // uses the row-column separation approach from slides 8-10.
-void dct_twostep_slow(const DataType data_in[8][8], int16_t data_out[8][8])
+void dct_twostep_slow(DataType data_in[8][8], int16_t data_out[8][8])
 {
+    int i, j;
     // [X] = [C] * [x] * [C]^T
     double tmp_io[8][8];
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             tmp_io[i][j] = data_in[i][j];
         }
     }
@@ -70,8 +72,8 @@ void dct_twostep_slow(const DataType data_in[8][8], int16_t data_out[8][8])
     square_matrix_multiply(twostep_slow_C, tmp_io, tmp);
     square_matrix_multiply(tmp, twostep_slow_CT, tmp_io);
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             // TODO: fix values outside [-128, 127]
             // additional 1/4 coefficient that is not in lecture notes
             double temp_result = tmp_io[i][j] / 4;

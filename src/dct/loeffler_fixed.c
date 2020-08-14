@@ -13,8 +13,9 @@ static const int32_t c1_1 = 1004,  // cos(pi/16) << 10
 
 void transpose_int(int32_t data[8][8])
 {
-    for (int i = 0; i < 8; ++i) {
-        for (int j = i + 1; j < 8; ++j) {
+    int i, j;
+    for (i = 0; i < 8; ++i) {
+        for (j = i + 1; j < 8; ++j) {
             int32_t tmp = data[i][j];
             data[i][j] = data[j][i];
             data[j][i] = tmp;
@@ -94,31 +95,32 @@ void dct_1d_fixed(int32_t data[8])
     data[1] = tmp_val; // restore from temp
 }
 
-void dct_loeffler_fixed(const DataType data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_fixed(DataType data_in[8][8], int16_t data_out[8][8])
 {
+    int i, j, k;
     // [X] = [C] * [x] * [C]^T
     int32_t tmp[8][8];
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             tmp[i][j] = data_in[i][j];
         }
     }
 
     // Do 1D for each row, put outputs into the row.
-    for (int k = 0; k < 8; ++k) {
+    for (k = 0; k < 8; ++k) {
         dct_1d_fixed(tmp[k]);
     }
     // Then, do 1D for each column, put outputs into the column.
     // transpose so that indexing by row actually indexes by column
     transpose_int(tmp);
-    for (int k = 0; k < 8; ++k) {
+    for (k = 0; k < 8; ++k) {
         dct_1d_fixed(tmp[k]);
     }
     // transpose back out so that columns are now actually columns
     transpose_int(tmp);
 
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 8; ++j) {
+    for (i = 0; i < 8; ++i) {
+        for (j = 0; j < 8; ++j) {
             data_out[i][j] = (int16_t) ((tmp[i][j] + (1<<2)) >> 3);
         }
     }
