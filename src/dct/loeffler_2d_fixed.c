@@ -55,7 +55,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         temp_value = temp_value - data[i][2]; // actually out[3]
         data[i][2] = data[i][0] + data[i][1]; // actually out[1]
         data[i][0] = data[i][0] - data[i][1]; // actually out[2]
-        // these values are 9-bit + 1 sign bit
         // bottom four:
         butterfly(data[i][5], data[i][6], &(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[i][4], data[i][7], &(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
@@ -65,9 +64,7 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         // top four:
         data[i][1] = data[i][3] + data[i][2]; // actually out[0]
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
-        // these values are 10-bit + 1 sign bit
         butterfly(data[i][0], temp_value, &(data[i][0]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
-        // these values are 10-bit + 1 sign bit
         // bottom four:
         data[i][2] = data[i][7] - data[i][5]; // actually out[5]
         data[i][7] = data[i][7] + data[i][5]; // actually out[7]
@@ -110,7 +107,6 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         temp_value = temp_value - data[2][i]; // actually out[3]
         data[2][i] = data[0][i] + data[1][i]; // actually out[1]
         data[0][i] = data[0][i] - data[1][i]; // actually out[2]
-        // these values are 12 bit + 1 sign bit
         // bottom four:
         butterfly(data[5][i], data[6][i], &(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
         butterfly(data[4][i], data[7][i], &(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
@@ -120,9 +116,7 @@ void dct_2d_fixed(DataType data_in[8][8], compute_t data[8][8])
         // top four:
         data[1][i] = data[3][i] + data[2][i]; // actually out[0]
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
-        // these values are 13 bit + 1 sign bit
         butterfly(data[0][i], temp_value, &(data[0][i]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
-        // these values are 13 bit + 1 sign bit
         // bottom four:
         data[2][i] = data[7][i] - data[5][i]; // actually out[5]
         data[7][i] = data[7][i] + data[5][i]; // actually out[7]
