@@ -1,0 +1,137 @@
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Input:
+
+Naive implementation:
+
+Two-step implementation:
+
+Loeffler floating-point implementation:
+
+Loeffler fixed-point implementation:
+
+Loeffler fixed-point implementation in direct 2d:
+
+Loeffler fixed-point implementation in direct 2d, inlined:
+
+Loeffler fixed-point implementation in direct 2d, macro:
+
+Loeffler fixed-point with assembly butterfly:
+Done running valgrind on all executables\n
