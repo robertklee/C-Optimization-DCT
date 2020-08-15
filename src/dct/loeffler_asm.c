@@ -1,9 +1,23 @@
 #include "dct/loeffler_asm.h"
 
 #include "util/constants.h"
+#include <stdio.h>
 
 void dct_asm(DataType data_in[8][8], int16_t data[8][8])
 {
+    int16_t first_value = 0x1234;
+    int16_t second_value = 0xabcd;
+    asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
+        "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+        //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+        "mov     %[right], %[left]\n\t"
+        "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+        "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+        : [left] "=l" (first_value), [right] "=l" (second_value)
+    );
+    printf("\nInput values: 0x1234 0xabcd.\n");
+    printf("\nOutput values: %04hx %04hx\n", first_value, second_value);
+
     int16_t temp_value; // extra temporary value
     uint8_t i;
     // Perform on rows
@@ -31,14 +45,14 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         // bottom four:
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[i][5]), [right] "=l" (data[i][6])
         );
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[i][4]), [right] "=l" (data[i][7])
@@ -51,7 +65,7 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[i][0]), [right] "=l" (temp_value)
@@ -101,14 +115,14 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         // bottom four:
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[5][i]), [right] "=l" (data[6][i])
         );
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[4][i]), [right] "=l" (data[7][i])
@@ -121,7 +135,7 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
         asm("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
             "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register 
+            //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
             "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
             "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
             : [left] "=l" (data[0][i]), [right] "=l" (temp_value)
