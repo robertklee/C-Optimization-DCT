@@ -7,15 +7,15 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
 {
     int16_t first_value = 0x1234;
     int16_t second_value = 0xabcd;
+    printf("\nInput values: %04hx %04hx\n", first_value, second_value);
     __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
         "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
         //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
         "mov     %[right], %[left]\n\t"
         "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
         "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-        : [left] "=l" (first_value), [right] "=l" (second_value)
+        : [left] "+l" (first_value), [right] "+l" (second_value)
     );
-    printf("\nInput values: 0x1234 0xabcd.\n");
     printf("\nOutput values: %04hx %04hx\n", first_value, second_value);
 
     int16_t temp_value; // extra temporary value
