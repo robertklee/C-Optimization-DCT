@@ -23,7 +23,7 @@ void transpose_int(int32_t data[8][8])
     }
 }
 
-static void butterfly(int32_t *top, int32_t *bot, uint8_t type)
+void butterfly_fixed(int32_t *top, int32_t *bot, uint8_t type)
 {
     int32_t tmp_sum, tmp_top;
     switch (type)
@@ -69,14 +69,14 @@ void dct_1d_fixed(int32_t data[8])
     data[2] = data[0] + data[1]; // actually out[1]
     data[0] = data[0] - data[1]; // actually out[2]
     // bottom four:
-    butterfly(&(data[5]), &(data[6]), 1); // C1 rotator: actually results in out[5] and out[6]
-    butterfly(&(data[4]), &(data[7]), 3); // C3 rotator: actually results in out[4] and out[7]
+    butterfly_fixed(&(data[5]), &(data[6]), 1); // C1 rotator: actually results in out[5] and out[6]
+    butterfly_fixed(&(data[4]), &(data[7]), 3); // C3 rotator: actually results in out[4] and out[7]
 
     // STAGE 3
     // top four:
     data[1] = data[3] + data[2]; // actually out[0]
     data[3] = data[3] - data[2]; // actually out[1]
-    butterfly(&(data[0]), &tmp_val, 6); // R2C6 rotator: actually results in out[2] and out[3]
+    butterfly_fixed(&(data[0]), &tmp_val, 6); // R2C6 rotator: actually results in out[2] and out[3]
     // bottom four:
     data[2] = data[7] - data[5]; // actually out[5]
     data[7] = data[7] + data[5]; // actually out[7]
