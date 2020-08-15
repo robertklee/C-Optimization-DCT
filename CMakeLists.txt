@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 project(seng440 LANGUAGES C)
 
+if (CMAKE_C_COMPILER STREQUAL "arm-linux-gcc")
+    set_target_properties(dct PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -static -S")
+endif()
+
 add_compile_options(-Wall -Werror -Wno-parentheses)
 
 add_executable(dct
@@ -15,7 +19,7 @@ add_executable(dct
                ${PROJECT_SOURCE_DIR}/src/util/helpers.c
                )
 target_include_directories(dct PUBLIC ${PROJECT_SOURCE_DIR}/include)
-set_target_properties(dct PROPERTIES COMPILE_FLAGS "-std=c99 -save-temps -O0 -fverbose-asm -g")
+set_target_properties(dct PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -save-temps -O0 -fverbose-asm -g")
 
 # List cmake properties (for debugging)
 if (DEBUG_CMAKE)
