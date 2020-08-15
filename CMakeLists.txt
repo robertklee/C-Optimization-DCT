@@ -8,7 +8,8 @@ endif()
 
 add_compile_options(-Wall -Werror -Wno-parentheses)
 
-option(ENABLE_OPTIMIZATION "Enable optimization targets" false)
+option(ENABLE_OPT "Enable optimization targets" false)
+option(ENABLE_MACRO_EXPANSION "Enable macro expansion target" false)
 
 set(SOURCE_FILES_DCT
         ${PROJECT_SOURCE_DIR}/src/main.c
@@ -31,34 +32,24 @@ set_target_properties(dct       PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=
 
 # Set compiler optimization levels for corresponding targets
 # https://caiorss.github.io/C-Cpp-Notes/compiler-flags-options.html
-if (ENABLE_OPTIMIZATION)
-    add_executable(dct_O0 ${SOURCE_FILES_DCT})
-    target_include_directories(dct_O0 PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_O1 ${SOURCE_FILES_DCT})
-    target_include_directories(dct_O1 PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_O2 ${SOURCE_FILES_DCT})
-    target_include_directories(dct_O2 PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_O3 ${SOURCE_FILES_DCT})
-    target_include_directories(dct_O3 PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_OFast ${SOURCE_FILES_DCT})
-    target_include_directories(dct_OFast PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_finline_functions ${SOURCE_FILES_DCT})
-    target_include_directories(dct_finline_functions PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_funroll_loops ${SOURCE_FILES_DCT})
-    target_include_directories(dct_funroll_loops PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    add_executable(dct_fvectorize ${SOURCE_FILES_DCT})
-    target_include_directories(dct_fvectorize PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
-    # Compiler target to only generate pre-processor expansions
-    add_library(dct_macro_expanded ${SOURCE_FILES_DCT})
-    target_include_directories(dct_macro_expanded PUBLIC ${PROJECT_SOURCE_DIR}/include)
+if (ENABLE_OPT)
+    add_executable(dct_O0                                   ${SOURCE_FILES_DCT})
+    add_executable(dct_O1                                   ${SOURCE_FILES_DCT})
+    add_executable(dct_O2                                   ${SOURCE_FILES_DCT})
+    add_executable(dct_O3                                   ${SOURCE_FILES_DCT})
+    add_executable(dct_OFast                                ${SOURCE_FILES_DCT})
+    add_executable(dct_finline_functions                    ${SOURCE_FILES_DCT})
+    add_executable(dct_funroll_loops                        ${SOURCE_FILES_DCT})
+    add_executable(dct_fvectorize                           ${SOURCE_FILES_DCT})
+    
+    target_include_directories(dct_O0                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_O1                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_O2                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_O3                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_OFast                    PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_finline_functions        PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_funroll_loops            PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_fvectorize               PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
     # Set compiler version to C99
     set_target_properties(  dct_O0
@@ -69,21 +60,27 @@ if (ENABLE_OPTIMIZATION)
                             dct_finline_functions
                             dct_funroll_loops
                             dct_fvectorize
-                            dct_macro_expanded 
                             PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -save-temps -fverbose-asm")
 
     # Various optimization levels targets
-    set_target_properties(dct_O0    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O0")
-    set_target_properties(dct_O1    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O1")
-    set_target_properties(dct_O2    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O2")
-    set_target_properties(dct_O3    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O3")
-    set_target_properties(dct_OFast PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -Ofast")
+    set_target_properties(dct_O0                    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O0")
+    set_target_properties(dct_O1                    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O1")
+    set_target_properties(dct_O2                    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O2")
+    set_target_properties(dct_O3                    PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O3")
+    set_target_properties(dct_OFast                 PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -Ofast")
     set_target_properties(dct_finline_functions     PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -finline-functions")
     set_target_properties(dct_funroll_loops         PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -funroll-loops")
     set_target_properties(dct_fvectorize            PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fvectorize")
 
-    # Set compiler to only generate pre-processor expansions
-    set_target_properties(dct_macro_expanded PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -E")
+endif()
+
+# Compiler target to only generate pre-processor expansions
+if (ENABLE_MACRO_EXPANSION)
+
+    add_library(dct_macro_expanded                          ${SOURCE_FILES_DCT})
+    target_include_directories(dct_macro_expanded PUBLIC    ${PROJECT_SOURCE_DIR}/include)
+    set_target_properties(dct_macro_expanded        PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -save-temps -fverbose-asm -E")
+
 endif()
 
 # List cmake properties (for debugging)
