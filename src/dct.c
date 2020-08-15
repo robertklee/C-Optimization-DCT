@@ -9,6 +9,7 @@
 #include "dct/loeffler_float.h"
 #include "dct/loeffler_fixed.h"
 #include "dct/loeffler_2d_fixed.h"
+#include "dct/loeffler_asm.h"
 
 void run_dct(const DataType *data, long width, long height, void (*dct_func)(DataType[8][8], int16_t[8][8]) )
 {
@@ -89,5 +90,11 @@ void dct(DataType *data, long width, long height, ExecutionMode executionMode)
         // Fifth: loeffler fixed-point implementation with direct 2d transform
         printf("\nLoeffler fixed-point implementation in direct 2d:\n");
         run_dct(data, width, height, dct_loeffler_2d_fixed);
+    }
+
+    if (executionMode == ALL) {
+        // Final: loeffler fixed-point implementation using assembly instructions for butterfly operation
+        printf("\nLoeffler fixed-point with assembly butterfly:\n");
+        run_dct(data, width, height, dct_loeffler_asm);
     }
 }
