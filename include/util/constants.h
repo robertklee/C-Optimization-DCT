@@ -111,7 +111,9 @@ typedef enum {
     TWO_STEP,
     LOEFFLER_FLOAT,
     LOEFFLER_FIXED,
-    LOEFFLER_2D_FIXED
+    LOEFFLER_2D_FIXED,
+    LOEFFLER_2D_FIXED_INLINE,
+    LOEFFLER_2D_FIXED_MACRO
 } ExecutionMode;
 
 typedef enum {
@@ -123,13 +125,16 @@ typedef enum {
     kDouble
 } ElementType;
 
+// compute_t: Type used for computation.
+typedef int16_t compute_t;
+
 // A flag to specify whether we are working with a level-off input. 
-// Comment out if we want to use unsigned
-#define LEVEL_OFF_ACTIVE
+// Set to 0 (FALSE) to turn off
+#define LEVEL_OFF_ACTIVE (1)
 
 // Conditionally set the type as int8_t or uint8_t depending on if we are performing
 // level off [-128,127] or not [0,255]
-#ifdef LEVEL_OFF_ACTIVE
+#if (LEVEL_OFF_ACTIVE)
 typedef int8_t DataType;
 #else
 typedef uint8_t DataType;

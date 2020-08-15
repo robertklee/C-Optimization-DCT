@@ -12,4 +12,6 @@ int8_t* JPG_level_off(uint8_t* in, unsigned long width, unsigned long height);
 
 void read_arguments(int argc, char** argv, const char ** const path, long* width, long* height, ExecutionMode* executionMode);
 
+
+
 #endif // HELPERS_H
