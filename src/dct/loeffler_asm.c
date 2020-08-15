@@ -2,7 +2,7 @@
 
 #include "util/constants.h"
 
-void dct_2d_fixed(DataType data_in[8][8], int16_t data[8][8])
+void dct_asm(DataType data_in[8][8], int16_t data[8][8])
 {
     int16_t temp_value; // extra temporary value
     uint8_t i;
@@ -148,7 +148,7 @@ void dct_2d_fixed(DataType data_in[8][8], int16_t data[8][8])
     }
 }
 
-void dct_loeffler_2d_fixed(DataType data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_asm(DataType data_in[8][8], int16_t data_out[8][8])
 {
-    dct_2d_fixed(data_in, data_out);
+    dct_asm(data_in, data_out);
 }
