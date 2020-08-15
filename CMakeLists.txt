@@ -12,6 +12,7 @@ add_executable(dct
                ${PROJECT_SOURCE_DIR}/src/dct/loeffler_float.c
                ${PROJECT_SOURCE_DIR}/src/dct/loeffler_fixed.c
                ${PROJECT_SOURCE_DIR}/src/dct/loeffler_2d_fixed.c
+               ${PROJECT_SOURCE_DIR}/src/dct/loeffler_asm.c
                ${PROJECT_SOURCE_DIR}/src/util/helpers.c
                )
 target_include_directories(dct PUBLIC ${PROJECT_SOURCE_DIR}/include)
