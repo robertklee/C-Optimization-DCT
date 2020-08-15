@@ -10,6 +10,7 @@
 #include "dct/loeffler_fixed.h"
 #include "dct/loeffler_2d_fixed.h"
 #include "dct/loeffler_2d_fixed_inline.h"
+#include "dct/loeffler_2d_fixed_macro.h"
 
 void run_dct(const DataType *data, long width, long height, void (*dct_func)(DataType[8][8], int16_t[8][8]) )
 {
@@ -96,5 +97,11 @@ void dct(DataType *data, long width, long height, ExecutionMode executionMode)
         // Fifth: loeffler fixed-point implementation with direct 2d transform
         printf("\nLoeffler fixed-point implementation in direct 2d, inlined:\n");
         run_dct(data, width, height, dct_loeffler_2d_fixed_inline);
+    }
+
+    if (executionMode == LOEFFLER_2D_FIXED_MACRO || executionMode == ALL) {
+        // Fifth: loeffler fixed-point implementation with direct 2d transform
+        printf("\nLoeffler fixed-point implementation in direct 2d, macro:\n");
+        run_dct(data, width, height, dct_loeffler_2d_fixed_macro);
     }
 }
