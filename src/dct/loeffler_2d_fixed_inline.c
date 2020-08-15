@@ -29,15 +29,15 @@ void dct_2d_fixed_inline(DataType data_in[8][8], compute_t data[8][8])
         data[i][2] = data[i][0] + data[i][1]; // actually out[1]
         data[i][0] = data[i][0] - data[i][1]; // actually out[2]
         // bottom four:
-        butterfly_2d_fixed_1(data[i][5], data[i][6], &(data[i][5]), &(data[i][6]), 1); // C1 rotator: actually results in out[5] and out[6]
-        butterfly_2d_fixed_3(data[i][4], data[i][7], &(data[i][4]), &(data[i][7]), 3); // C3 rotator: actually results in out[4] and out[7]
+        butterfly_2d_fixed_1(data[i][5], data[i][6], &(data[i][5]), &(data[i][6])); // C1 rotator: actually results in out[5] and out[6]
+        butterfly_2d_fixed_3(data[i][4], data[i][7], &(data[i][4]), &(data[i][7])); // C3 rotator: actually results in out[4] and out[7]
         // these values are 9-bit + 1 sign bit
 
         // STAGE 3
         // top four:
         data[i][1] = data[i][3] + data[i][2]; // actually out[0]
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
-        butterfly_2d_fixed_6(data[i][0], temp_value, &(data[i][0]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
+        butterfly_2d_fixed_6(data[i][0], temp_value, &(data[i][0]), &temp_value); // R2C6 rotator: actually results in out[2] and out[3]
         // bottom four:
         data[i][2] = data[i][7] - data[i][5]; // actually out[5]
         data[i][7] = data[i][7] + data[i][5]; // actually out[7]
@@ -81,15 +81,15 @@ void dct_2d_fixed_inline(DataType data_in[8][8], compute_t data[8][8])
         data[2][i] = data[0][i] + data[1][i]; // actually out[1]
         data[0][i] = data[0][i] - data[1][i]; // actually out[2]
         // bottom four:
-        butterfly_2d_fixed_1(data[5][i], data[6][i], &(data[5][i]), &(data[6][i]), 1); // C1 rotator: actually results in out[5] and out[6]
-        butterfly_2d_fixed_3(data[4][i], data[7][i], &(data[4][i]), &(data[7][i]), 3); // C3 rotator: actually results in out[4] and out[7]
+        butterfly_2d_fixed_1(data[5][i], data[6][i], &(data[5][i]), &(data[6][i])); // C1 rotator: actually results in out[5] and out[6]
+        butterfly_2d_fixed_3(data[4][i], data[7][i], &(data[4][i]), &(data[7][i])); // C3 rotator: actually results in out[4] and out[7]
         // these values are 12 bit + 1 sign bit
 
         // STAGE 3
         // top four:
         data[1][i] = data[3][i] + data[2][i]; // actually out[0]
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
-        butterfly_2d_fixed_6(data[0][i], temp_value, &(data[0][i]), &temp_value, 6); // R2C6 rotator: actually results in out[2] and out[3]
+        butterfly_2d_fixed_6(data[0][i], temp_value, &(data[0][i]), &temp_value); // R2C6 rotator: actually results in out[2] and out[3]
         // bottom four:
         data[2][i] = data[7][i] - data[5][i]; // actually out[5]
         data[7][i] = data[7][i] + data[5][i]; // actually out[7]
