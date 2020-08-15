@@ -1,11 +1,10 @@
-#include "dct/loeffler_asm.h"
+#include "dct/loeffler_2d_fixed_macro.h"
 
 #include "util/constants.h"
-#include <stdio.h>
 
-void dct_asm(DataType data_in[8][8], int16_t data[8][8])
+void dct_2d_fixed_macro(DataType data_in[8][8], compute_t data[8][8])
 {
-    int16_t temp_value; // extra temporary value
+    compute_t temp_value; // extra temporary value
     uint8_t i;
     // Perform on rows
     for (i = 0; i < 8; ++i)
@@ -30,33 +29,15 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         data[i][2] = data[i][0] + data[i][1]; // actually out[1]
         data[i][0] = data[i][0] - data[i][1]; // actually out[2]
         // bottom four:
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][5]), [right] "+l" (data[i][6])
-        );
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][4]), [right] "+l" (data[i][7])
-        );
+        BUTTERFLY_2D_FIXED(data[i][5], data[i][6], data[i][5], data[i][6], C1_1, C1_2, C1_3); // C1 rotator: actually results in out[5] and out[6]
+        BUTTERFLY_2D_FIXED(data[i][4], data[i][7], data[i][4], data[i][7], C3_1, C3_2, C3_3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 9-bit + 1 sign bit
 
         // STAGE 3
         // top four:
         data[i][1] = data[i][3] + data[i][2]; // actually out[0]
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][0]), [right] "+l" (temp_value)
-        );
+        BUTTERFLY_2D_FIXED(data[i][0], temp_value, data[i][0], temp_value, C6_1, C6_2, C6_3); // R2C6 rotator: actually results in out[2] and out[3]
         // bottom four:
         data[i][2] = data[i][7] - data[i][5]; // actually out[5]
         data[i][7] = data[i][7] + data[i][5]; // actually out[7]
@@ -100,33 +81,15 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
         data[2][i] = data[0][i] + data[1][i]; // actually out[1]
         data[0][i] = data[0][i] - data[1][i]; // actually out[2]
         // bottom four:
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[5][i]), [right] "+l" (data[6][i])
-        );
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[4][i]), [right] "+l" (data[7][i])
-        );
+        BUTTERFLY_2D_FIXED(data[5][i], data[6][i], data[5][i], data[6][i], C1_1, C1_2, C1_3); // C1 rotator: actually results in out[5] and out[6]
+        BUTTERFLY_2D_FIXED(data[4][i], data[7][i], data[4][i], data[7][i], C3_1, C3_2, C3_3); // C3 rotator: actually results in out[4] and out[7]
         // these values are 12 bit + 1 sign bit
 
         // STAGE 3
         // top four:
         data[1][i] = data[3][i] + data[2][i]; // actually out[0]
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
-        __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[0][i]), [right] "+l" (temp_value)
-        );
+        BUTTERFLY_2D_FIXED(data[0][i], temp_value, data[0][i], temp_value, C6_1, C6_2, C6_3); // R2C6 rotator: actually results in out[2] and out[3]
         // bottom four:
         data[2][i] = data[7][i] - data[5][i]; // actually out[5]
         data[7][i] = data[7][i] + data[5][i]; // actually out[7]
@@ -149,7 +112,25 @@ void dct_asm(DataType data_in[8][8], int16_t data[8][8])
     }
 }
 
-void dct_loeffler_asm(DataType data_in[8][8], int16_t data_out[8][8])
+void dct_loeffler_2d_fixed_macro(DataType data_in[8][8], int16_t data_out[8][8])
 {
-    dct_asm(data_in, data_out);
+    dct_2d_fixed_macro(data_in, data_out);
 }
+
+// DONE level-off
+// DONE 16 bit interim values (shift before multiply by sqrt_2 - possibly use only 7 bits for sqrt 2, 9 bits for others?)
+// DONE 7 bit scale factors - otherwise we run out of bits within 16. this is done, but needs some fixing.
+// DONE correct rounding before shifting (add to smallest shifted-out bit before shifting)
+// DONE finish fixing 16 bit interim values - now cast to 32 bit before multiplying, and cast back afterwards
+// DONE remove temporary array copy
+// DONE fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
+// is implementation-defined for signed inputs. consequently, our shift operations produce undefined behaviour. we'll need to check
+// with the arm-linux-gcc compiler to determine which is used. -> asr (arithmetic shift right) is correctly used.
+//
+// DONE merge various branches into master to combine these things
+// DONE (install recent git & cmake on seng440.ece.uvic.ca)
+// DONE compile assembly with arm-gcc compiler: arm-linux-gcc -static -o file.exe file.c (or -s for assembly, I think)
+// look at generated assembly with different optimization levels with -O0 -O1 -O2 -O3
+// investigate number of clock cycles it would take with butterfly routine vs inlined routine vs (using direct assembly
+// modification) an optimized firmware instruction
+// start on report and figure out from there

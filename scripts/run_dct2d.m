@@ -1,4 +1,4 @@
-fileName = './test/64_byte_input';
+fileName = '../test/64_byte_input';
 
 str = fileread( fileName );
 flattened = double( str );

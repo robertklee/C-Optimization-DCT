@@ -9,7 +9,9 @@
 #include "dct/loeffler_float.h"
 #include "dct/loeffler_fixed.h"
 #include "dct/loeffler_2d_fixed.h"
-#include "dct/loeffler_asm.h"
+#include "dct/loeffler_2d_fixed_inline.h"
+#include "dct/loeffler_2d_fixed_macro.h"
+#include "dct/loeffler_2d_fixed_asm.h"
 
 void run_dct(const DataType *data, long width, long height, void (*dct_func)(DataType[8][8], int16_t[8][8]) )
 {
@@ -87,14 +89,26 @@ void dct(DataType *data, long width, long height, ExecutionMode executionMode)
     }
 
     if (executionMode == LOEFFLER_2D_FIXED || executionMode == ALL) {
-        // Fifth: loeffler fixed-point implementation with direct 2d transform
+        // Fifth: loeffler fixed-point implementation with direct 2d
         printf("\nLoeffler fixed-point implementation in direct 2d:\n");
         run_dct(data, width, height, dct_loeffler_2d_fixed);
     }
 
-    if (executionMode == ALL) {
-        // Final: loeffler fixed-point implementation using assembly instructions for butterfly operation
+    if (executionMode == LOEFFLER_2D_FIXED_INLINE || executionMode == ALL) {
+        // Sixth: loeffler fixed-point implementation with direct 2d and inline butterfly
+        printf("\nLoeffler fixed-point implementation in direct 2d, inlined:\n");
+        run_dct(data, width, height, dct_loeffler_2d_fixed_inline);
+    }
+
+    if (executionMode == LOEFFLER_2D_FIXED_MACRO || executionMode == ALL) {
+        // Seventh: loeffler fixed-point implementation with direct 2d and macro butterfly
+        printf("\nLoeffler fixed-point implementation in direct 2d, macro:\n");
+        run_dct(data, width, height, dct_loeffler_2d_fixed_macro);
+    }
+
+    if (executionMode == LOEFFLER_2D_FIXED_ASM || executionMode == ALL) {
+        // Eighth: loeffler fixed-point implementation using assembly instructions for butterfly operation
         printf("\nLoeffler fixed-point with assembly butterfly:\n");
-        run_dct(data, width, height, dct_loeffler_asm);
+        run_dct(data, width, height, dct_loeffler_2d_fixed_asm);
     }
 }

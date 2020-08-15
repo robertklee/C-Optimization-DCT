@@ -5,6 +5,10 @@ build/
 build_xcode
 debug
 
+# C Compilation intermediate files
+*.bc
+*.i
+
 # Prerequisites
 *.d
 
