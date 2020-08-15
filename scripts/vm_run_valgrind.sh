@@ -14,7 +14,7 @@ mkdir -p ${OUTPUT}
 
 for executable in "${EXECUTABLES[@]}"
 do
-    /usr/bin/valgrind --tool=callgrind --callgrind-out-file=${OUTPUT}/${executable}.out ${BUILD}/${executable} ${PARAMS}
+    /usr/bin/valgrind --tool=callgrind --callgrind-out-file=${OUTPUT}/${executable}.output ${BUILD}/${executable} ${PARAMS}
 done
 
 echo "Done running valgrind on all executables\n"
