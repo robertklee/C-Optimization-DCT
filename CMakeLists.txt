@@ -71,7 +71,7 @@ if (ENABLE_OPT)
     set_target_properties(dct_OFast                 PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -Ofast")
     set_target_properties(dct_finline_functions     PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -finline-functions")
     set_target_properties(dct_funroll_loops         PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -funroll-loops")
-    set_target_properties(dct_max                   PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O3 -finline-functions -funroll-loops -frename-registers -march=native")
+    set_target_properties(dct_max                   PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -save-temps -fverbose-asm -O3 -finline-functions -funroll-loops -frename-registers -march=native")
 
 endif()
 
