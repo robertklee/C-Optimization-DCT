@@ -3,6 +3,12 @@
 #include "util/constants.h"
 #include <stdio.h>
 
+// BTRFLY_ASM_TYPE defines the way that the butterfly operation is implemented in asm.
+// 1 uses a "BTRFLY" assembly instruction.
+// 2 uses a sequence of assembly instructions intended to approximate the cost of the butterfly operation.
+// any other value uses nothing, i.e. a NOP.
+#define BTRFLY_ASM_TYPE 1
+
 void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
 {
     int16_t temp_value; // extra temporary value
@@ -31,20 +37,26 @@ void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
         data[i][0] = data[i][0] - data[i][1]; // actually out[2]
         // bottom four:
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][5]), [right] "+l" (data[i][6])
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[i][5]), [right] "+l" (data[i][6])
         );
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][4]), [right] "+l" (data[i][7])
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[i][4]), [right] "+l" (data[i][7])
         );
         // these values are 9-bit + 1 sign bit
 
@@ -53,12 +65,15 @@ void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
         data[i][1] = data[i][3] + data[i][2]; // actually out[0]
         data[i][3] = data[i][3] - data[i][2]; // actually out[1]
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[i][0]), [right] "+l" (temp_value)
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[i][0]), [right] "+l" (temp_value)
         );
         // bottom four:
         data[i][2] = data[i][7] - data[i][5]; // actually out[5]
@@ -104,20 +119,26 @@ void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
         data[0][i] = data[0][i] - data[1][i]; // actually out[2]
         // bottom four:
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[5][i]), [right] "+l" (data[6][i])
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #1"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[5][i]), [right] "+l" (data[6][i])
         );
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[4][i]), [right] "+l" (data[7][i])
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #2"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[4][i]), [right] "+l" (data[7][i])
         );
         // these values are 12 bit + 1 sign bit
 
@@ -126,12 +147,15 @@ void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
         data[1][i] = data[3][i] + data[2][i]; // actually out[0]
         data[3][i] = data[3][i] - data[2][i]; // actually out[1]
         __asm__("lsl     %[left], %[left], #16"     "\n\t" // move left value to top 16 bits, clearing bottom 16
-            "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
-            //"BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
-            "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
-            "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
-            "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
-            : [left] "+l" (data[0][i]), [right] "+l" (temp_value)
+                "uxtah   %[left], %[left], %[right]  \n\t" // zero-extend right value and add it to the left value, concatenating them.
+#if BTRFLY_ASM_TYPE == 1
+                "BTRFLY  %[right], %[left], #3"     "\n\t" // perform firmware-implemented BTRFLY operation on 32-bit "left" register, storing in 32-bit "right" register
+#elif BTRFLY_ASM_TYPE == 2
+                "mul %[left], %[right]\n\tadd %[left], %[right]\n\tmul %[left], %[right]\n\tasr %[left], %[left], #7\n\t" // replacement operations for btrfly
+#endif
+                "asr     %[left], %[right], #16"    "\n\t" // move top 16 bits of output register into left register
+                "sxth    %[right], %[right]"               // sign-extend to copy sign bit to upper half of right register
+                : [left] "+l" (data[0][i]), [right] "+l" (temp_value)
         );
         // bottom four:
         data[2][i] = data[7][i] - data[5][i]; // actually out[5]
