@@ -41,7 +41,7 @@ if (ENABLE_OPT)
     add_executable(dct_OFast                                ${SOURCE_FILES_DCT})
     add_executable(dct_finline_functions                    ${SOURCE_FILES_DCT})
     add_executable(dct_funroll_loops                        ${SOURCE_FILES_DCT})
-#    add_executable(dct_fvectorize                           ${SOURCE_FILES_DCT})
+    add_executable(dct_max                                  ${SOURCE_FILES_DCT})
     
     target_include_directories(dct_O0                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
     target_include_directories(dct_O1                       PUBLIC ${PROJECT_SOURCE_DIR}/include)
@@ -50,7 +50,7 @@ if (ENABLE_OPT)
     target_include_directories(dct_OFast                    PUBLIC ${PROJECT_SOURCE_DIR}/include)
     target_include_directories(dct_finline_functions        PUBLIC ${PROJECT_SOURCE_DIR}/include)
     target_include_directories(dct_funroll_loops            PUBLIC ${PROJECT_SOURCE_DIR}/include)
-#    target_include_directories(dct_fvectorize               PUBLIC ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(dct_max                      PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
     # Set compiler version to C99
     set_target_properties(  dct_O0
@@ -60,7 +60,7 @@ if (ENABLE_OPT)
                             dct_OFast
                             dct_finline_functions
                             dct_funroll_loops
-#                            dct_fvectorize
+                            dct_max
                             PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -save-temps -fverbose-asm")
 
     # Various optimization levels targets
@@ -71,7 +71,7 @@ if (ENABLE_OPT)
     set_target_properties(dct_OFast                 PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -Ofast")
     set_target_properties(dct_finline_functions     PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -finline-functions")
     set_target_properties(dct_funroll_loops         PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -funroll-loops")
-#    set_target_properties(dct_fvectorize            PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -fvectorize")
+    set_target_properties(dct_max                   PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -O3 -finline-functions -funroll-loops -frename-registers -march=native")
 
 endif()
 
