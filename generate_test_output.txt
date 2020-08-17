@@ -1,8 +1,0 @@
-rm ../tests/unix/*
-./dct >> ../tests/unix/output6.expected
-./dct ../test/64_byte_input 8 8 >> ../tests/unix/output0.expected
-./dct ../test/64_byte_input 8 8 1 >> ../tests/unix/output1.expected
-./dct ../test/64_byte_input 8 8 2 >> ../tests/unix/output2.expected
-./dct ../test/64_byte_input 8 8 3 >> ../tests/unix/output3.expected
-./dct ../test/64_byte_input 8 8 4 >> ../tests/unix/output4.expected
-./dct ../test/64_byte_input 8 8 5 >> ../tests/unix/output5.expected
