@@ -83,27 +83,7 @@ void dct_1d_float(const double data_in[8], double data_out[8], uint8_t firstPass
     // reflector
     data_out[1] = stage3out[7] + stage3out[4];
 
-    // outputs
-    // Potential fixed point solution for first pass
-//        rows[i][0]=x6;
-//        rows[i][4]=x4;
-//        rows[i][2]=x8>>10;
-//        rows[i][6]=x7>>10;
-//        rows[i][7]=(x2-x5)>>10;
-//        rows[i][1]=(x2+x5)>>10;
-//        rows[i][3]=(x3*r2)>>17;
-//        rows[i][5]=(x0*r2)>>17;
-
-    // Potential solution for second pass
-//        data[0][i]=(double)((x6+16)>>3);
-//        data[4][i]=(double)((x4+16)>>3);
-//        data[2][i]=(double)((x8+16384)>>13);
-//        data[6][i]=(double)((x7+16384)>>13);
-//        data[7][i]=(double)((x2-x5+16384)>>13);
-//        data[1][i]=(double)((x2+x5+16384)>>13);
-//        data[3][i]=(double)(((x3>>8)*r2+8192)>>12);
-//        data[5][i]=(double)(((x0>>8)*r2+8192)>>12);
-
+    // Divide by 8 after calculating 1D DCT on columns
     if (!firstPass)
     {
         data_out[0] /= 8;
@@ -144,7 +124,6 @@ void dct_loeffler_float(DataType data_in[8][8], int16_t data_out[8][8])
 
     for (i = 0; i < 8; ++i) {
         for (j = 0; j < 8; ++j) {
-            // TODO: fix values outside [-128, 127]
             data_out[i][j] = ROUND_INT16(tmp_io[i][j]);
         }
     }

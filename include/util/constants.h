@@ -8,7 +8,7 @@
 #define SQRT_2_INV          0.707106781186547524400844362104849039284835937688474036588
 #define ROUND_NEAREST       0.5
 
-// DCT_PRECISION: How many bits for each scaling factor. This must be at most 10.
+// DCT_PRECISION: How many bits for each scaling factor.
 #if DCT_PRECISION != 10 && DCT_PRECISION != 8 && DCT_PRECISION != 7 && DCT_PRECISION != 6 && DCT_PRECISION != 4
 #ifdef DCT_PRECISION
 #undef DCT_PRECISION
@@ -126,7 +126,7 @@ typedef enum {
     kDouble
 } ElementType;
 
-// compute_t: Type used for computation.
+// compute_t: Type used for computation in loeffler implementation(s).
 typedef int16_t compute_t;
 
 // A flag to specify whether we are working with a level-off input. 
@@ -140,5 +140,8 @@ typedef int8_t DataType;
 #else
 typedef uint8_t DataType;
 #endif // LEVEL_OFF_ACTIVE
+
+// Set to 1 for running correctness tests, where output is printed.
+#define PRINT_DCT_OUTPUT 0
 
 #endif // CONSTANTS_H

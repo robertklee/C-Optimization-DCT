@@ -141,21 +141,3 @@ void dct_loeffler_2d_fixed(DataType data_in[8][8], int16_t data_out[8][8])
 {
     dct_2d_fixed(data_in, data_out);
 }
-
-// DONE level-off
-// DONE 16 bit interim values (shift before multiply by sqrt_2 - possibly use only 7 bits for sqrt 2, 9 bits for others?)
-// DONE 7 bit scale factors - otherwise we run out of bits within 16. this is done, but needs some fixing.
-// DONE correct rounding before shifting (add to smallest shifted-out bit before shifting)
-// DONE finish fixing 16 bit interim values - now cast to 32 bit before multiplying, and cast back afterwards
-// DONE remove temporary array copy
-// DONE fix right-shift issue: whether right-shift is arithmetic (keeping negative values negative) or logical (filling with zeroes)
-// is implementation-defined for signed inputs. consequently, our shift operations produce undefined behaviour. we'll need to check
-// with the arm-linux-gcc compiler to determine which is used. -> asr (arithmetic shift right) is correctly used.
-//
-// DONE merge various branches into master to combine these things
-// DONE (install recent git & cmake on seng440.ece.uvic.ca)
-// DONE compile assembly with arm-gcc compiler: arm-linux-gcc -static -o file.exe file.c (or -s for assembly, I think)
-// look at generated assembly with different optimization levels with -O0 -O1 -O2 -O3
-// investigate number of clock cycles it would take with butterfly routine vs inlined routine vs (using direct assembly
-// modification) an optimized firmware instruction
-// start on report and figure out from there

@@ -37,8 +37,6 @@ static double twostep_slow_CT[8][8] =
     {c4, -c1,  c2, -c3,  c4, -c5,  c6, -c7}
 };
 
-// TODO: This could be made more efficient by having one function for each step,
-//       allowing us to optimize array access to always be row-first indexing.
 // preconditions: lhs != out and rhs != out (lhs == rhs OK)
 void square_matrix_multiply(double lhs[8][8], double rhs[8][8], double out[8][8])
 {
@@ -74,7 +72,6 @@ void dct_twostep_slow(DataType data_in[8][8], int16_t data_out[8][8])
 
     for (i = 0; i < 8; ++i) {
         for (j = 0; j < 8; ++j) {
-            // TODO: fix values outside [-128, 127]
             // additional 1/4 coefficient that is not in lecture notes
             double temp_result = tmp_io[i][j] / 4;
             data_out[i][j] = ROUND_INT16(temp_result);
