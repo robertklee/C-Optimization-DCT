@@ -9,4 +9,8 @@
 // be divisible by 8.
 void dct(DataType *data, long width, long height, ExecutionMode executionMode);
 
+#if !ENABLE_ASM_COMPILATION
+#define ENABLE_ASM_COMPILATION FALSE
+#endif // ENABLE_ASM_COMPILATION
+
 #endif // SENG440_DCT_H

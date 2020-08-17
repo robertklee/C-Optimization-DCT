@@ -142,6 +142,9 @@ typedef uint8_t DataType;
 #endif // LEVEL_OFF_ACTIVE
 
 // Set to 1 for running correctness tests, where output is printed.
+#if !PRINT_DCT_OUTPUT
+#undef PRINT_DCT_OUTPUT
 #define PRINT_DCT_OUTPUT 0
+#endif // PRINT_DCT_OUTPUT
 
 #endif // CONSTANTS_H
