@@ -3,10 +3,15 @@
 ## Getting Started
 After cloning the repository, make a new directory called `build` and run `cmake ..` within it. The following CMake options are available, along with their defaults:
 
-- ENABLE_OPT (false): Enables various optimization targets each with a different optimization flag
-- ENABLE_MACRO_EXPANSION (false): Enables a target which expands macros and other pre-processor directives
+- `ENABLE_OPT` (false): Enables various optimization targets each with a different optimization flag
+- `ENABLE_MACRO_EXPANSION` (false): Enables a target which expands macros and other pre-processor directives
 
 The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. However, with a few modifications, it will compile to an x86 processor.
+
+### Running `dct` target
+To run the `dct` target, you need to pass it an input file. Sample files are stored in the `test` directory. Use the following command to run with a sample input:
+
+`./dct ../test/64_byte_input 8 8`
 
 ## Introduction
 The Discrete Cosine Transform (DCT) is a technique to extract frequency-domain information from a given input signal. The DCT is used in industry as a component of the JPEG and MPEG image compression standards. N×N blocks are used, where N=8 is most common. As consumers demand faster and higher quality data and consistent performance increases, it is increasingly important to optimize data compaction and transmission speeds. Hardware and firmware support for image compression, including the DCT, is an important component of the solution.
