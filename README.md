@@ -6,6 +6,8 @@ After cloning the repository, make a new directory called `build` and run `cmake
 - ENABLE_OPT (false): Enables various optimization targets each with a different optimization flag
 - ENABLE_MACRO_EXPANSION (false): Enables a target which expands macros and other pre-processor directives
 
+The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. However, with a few modifications, it will compile to an x86 processor.
+
 ## Introduction
 The Discrete Cosine Transform (DCT) is a technique to extract frequency-domain information from a given input signal. The DCT is used in industry as a component of the JPEG and MPEG image compression standards. N×N blocks are used, where N=8 is most common. As consumers demand faster and higher quality data and consistent performance increases, it is increasingly important to optimize data compaction and transmission speeds. Hardware and firmware support for image compression, including the DCT, is an important component of the solution.
 
@@ -23,10 +25,10 @@ For each different software optimization implementation of the DCT, we compiled 
 ### Contributions
 The work was split between two team members, and both members were involved in all aspects of each other’s work. A high-level overview of the work consists of the following modules:
 
-- CMake project configuration: Set up the repository structure, targets, and options
-- Various DCT algorithms: Algorithm implementation for naïve, two-step, and Loeffler DCT algorithms (details in next section)
-- Optimizations: C and assembly optimizations to improve code performance
-- Code profiling: Use valgrind, cachegrind, and callgrind [5] to profile various optimization levels, and visualize using kcachegrind [6]
+- *CMake project configuration*: Set up the repository structure, targets, and options
+- *Various DCT algorithms*: Algorithm implementation for naïve, two-step, and Loeffler DCT algorithms (details in next section)
+- *Optimizations*: C and assembly optimizations to improve code performance
+- *Code profiling*: Use valgrind, cachegrind, and callgrind [5] to profile various optimization levels, and visualize using kcachegrind [6]
 
 ## Background
 The DCT transforms a finite sequence of data points into a sum of cosine functions with different oscillation frequencies. The DCT is related to the Discrete Fourier Transform (DFT) in that both transform from the time or spatial domain to the frequency domain. For DFT, the sequences are complex exponential of the form e^(j2πkn/N). This results in the output sequence to be, in general, complex-valued even if the input sequence is real. This is not ideal for some digital applications, as complex calculations require the storage of twice the numbers – one real, one imaginary – and complex multiplications, which are slower than single-valued real multiplications. 
