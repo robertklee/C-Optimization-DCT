@@ -71,5 +71,29 @@ In terms of our source code, we organized it into distinct modules for each of o
 - *dct folder*: Code for each of the implementations (1) to (8)
 - *util folder*: Utilities such as constants, enumerations, helper functions, and rounding macros
 
+## References
+
+[1]	“Build with CMake. Build with confidence.,” CMake. [Online]. Available: https://cmake.org/. [Accessed: 16-Aug-2020]. 
+
+[2]	“Build software better, together,” GitHub. [Online]. Available: https://github.com/. [Accessed: 16-Aug-2020].
+
+[3]	“Git --distributed-is-the-new-centralized,” Git. [Online]. Available: https://git-scm.com/. [Accessed: 16-Aug-2020].
+
+[4]	“MATLAB,” MathWorks. [Online]. Available: https://www.mathworks.com/products/matlab.html. [Accessed: 16-Aug-2020].
+
+[5]	Valgrind. [Online]. Available: https://valgrind.org/. [Accessed: 16-Aug-2020].
+
+[6]	KCachegrind. [Online]. Available: https://kcachegrind.github.io/html/Home.html. [Accessed: 16-Aug-2020].
+
+[7]	A. V. Oppenheim and L. Lee, Discrete-time signal processing, 3rd ed. Pearson, 2009. 
+
+[8]	SENG 440 Embedded Systems: Lesson 109: Discrete Cosine Transform (DCT), Dr. M. Sima, University of Victoria, Victoria, BC, 2019.
+
+[9]	Loeffler, C.; Ligtenberg, A.; Moschytz, G.S. Practical Fast 1-D DCT Algorithms with 11 Multiplications. In Proceedings of the International Conference on Acoustics, Speech, and Signal Processing, Glasgow, UK, 23–26 May 1989; Volume 2; pp. 988–991.
+
+[10]	Fedora ARM Virtual Machine. [Online]. Available: https://stede.seng.uvic.ca/studentrepo/?dir=./Software/seng440. [Accessed 16-Aug-2020].
+
+[11]	“SIMD ISAs: Neon Intrinsics Reference,” Arm Developer. [Online]. Available: https://developer.arm.com/architectures/instruction-sets/simd-isas/neon/intrinsics. [Accessed: 17-Aug-2020].
+
 
 ## TODO Add images to README
