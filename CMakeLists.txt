@@ -2,17 +2,13 @@ cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 project(seng440 LANGUAGES C)
 
-if (CMAKE_C_COMPILER STREQUAL "arm-linux-gcc")
-    set_target_properties(dct PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} -static -S")
-endif()
-
 add_compile_options(-Wall -Werror -Wno-parentheses)
 
 option(ENABLE_OPT               "Enable optimization targets"   false)
 option(ENABLE_MACRO_EXPANSION   "Enable macro expansion target" false)
 option(ENABLE_ASM_COMPILATION   "Enable ASM compilation"        false)
 option(ENABLE_OUTPUT            "Enable printing to console"    true)
-option(ENABLE_ASM_OUTPUT        "Enable saving of intermediate asm" false)
+option(ENABLE_SAVE_ASM          "Enable saving of intermediate asm" false)
 option(ENABLE_OPT_MAX           "Enable maximum optimization target" false)
 
 set(SOURCE_FILES_DCT
@@ -33,21 +29,23 @@ if (ENABLE_ASM_COMPILATION)
     set(SOURCE_FILES_DCT 
         ${SOURCE_FILES_DCT}
         ${PROJECT_SOURCE_DIR}/src/dct/loeffler_2d_fixed_asm.c)
-    
-    add_compile_definitions(ENABLE_ASM_COMPILATION=TRUE)
 endif()
+add_definitions(-DENABLE_ASM_COMPILATION=${ENABLE_ASM_COMPILATION})
 
 # add printing
-if (ENABLE_OUTPUT)
-    add_compile_definitions(PRINT_DCT_OUTPUT=TRUE)
-endif()
+add_definitions(-DPRINT_DCT_OUTPUT=${ENABLE_OUTPUT})
 
 # Base compilation flags
 set(BASE_COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -g")
 
 # If intermediate asm output is enabled
-if (ENABLE_ASM_OUTPUT)
+if (ENABLE_SAVE_ASM)
     set(BASE_COMPILE_FLAGS "{BASE_COMPILE_FLAGS} -save-temps -fverbose-asm ")
+endif()
+
+# If compiler is ARM
+if (CMAKE_C_COMPILER STREQUAL "arm-linux-gcc")
+    set(BASE_COMPILE_FLAGS "{BASE_COMPILE_FLAGS} -static -S")
 endif()
 
 # Debugging target

@@ -3,12 +3,6 @@
 #include "util/constants.h"
 #include <stdio.h>
 
-// BTRFLY_ASM_TYPE defines the way that the butterfly operation is implemented in asm.
-// 1 uses a "BTRFLY" assembly instruction.
-// 2 uses a sequence of assembly instructions intended to approximate the cost of the butterfly operation.
-// any other value uses nothing, i.e. a NOP.
-#define BTRFLY_ASM_TYPE 1
-
 void dct_2d_fixed_asm(DataType data_in[8][8], int16_t data[8][8])
 {
     int16_t temp_value; // extra temporary value
