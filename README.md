@@ -71,6 +71,15 @@ In terms of our source code, we organized it into distinct modules for each of o
 - *dct folder*: Code for each of the implementations (1) to (8)
 - *util folder*: Utilities such as constants, enumerations, helper functions, and rounding macros
 
+## Conclusion
+
+The most optimized implementation of the DCT achieved our goal of substantial performance improvements of at least 10x as compared to the naïve implementation. However, as compared to the matrix-multiplication-based implementation, the most optimized implementation achieved a performance improvement of less than our goal of 10x. Inline and macro did offer performance benefits compared to the code without these, but at higher optimization flags the compiler produced no difference between the two. The most substantial performance improvements came from implementing Loeffler’s algorithm, converting from floating-point to fixed-point arithmetic, removing the transpose operations, and converting the Butterfly operation from a routine to a firmware instruction. We also met our learning goals of low-level programming, CMake projects, the compiler code translation process, and hardware-software-firmware co-design. Overall, we consider the project to be a success.
+
+## Future Work
+
+The speed of the most optimized implementation could likely be improved further, if additional time were spent on the project. The primary area of focus would be on optimizing the assembly code.  Improving processor pipelining by merging loop iterations in the Loeffler algorithm could provide performance improvements, although this may reduce performance by increasing the number of registers required to store all operands. Reordering operations after Loeffler’s first step could additionally provide performance improvements, as the top four operands are independent of the bottom four operands and could be calculated independently. Loop unrolling across iterations of Loeffler’s algorithm could also be attempted; however, this must be profiled to ensure that it results in an overall speedup, given the resulting reduced instruction cache performance. Finally, using ARM vector operations to perform the 1D DCT on multiple rows or columns simultaneously would likely improve performance substantially.
+
+
 ## References
 
 [1]	“Build with CMake. Build with confidence.,” CMake. [Online]. Available: https://cmake.org/. [Accessed: 16-Aug-2020]. 
