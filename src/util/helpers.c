@@ -118,7 +118,13 @@ void read_arguments(int argc, char** argv, const char ** const path, long* width
                                          "1: NONE\n"
                                          "2: NAIVE\n"
                                          "3: TWO_STEP\n"
-                                         "4: LOUFFLER_FLOAT\n";
+                                         "4: LOUFFLER_FLOAT\n"
+                                         "5: LOUFFLER_FIXED\n"
+                                         "6: LOUFFLER_2D_FIXED\n"
+                                         "7: LOUFFLER_2D_FIXED_INLINE\n"
+                                         "8: LOUFFLER_2D_FIXED_MACRO\n"
+                                         "9: LOUFFLER_2D_FIXED_ASM\n"
+                                         ;
 
     if (argc != 4 && argc != 5)
     {

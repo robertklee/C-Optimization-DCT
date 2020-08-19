@@ -11,7 +11,10 @@
 #include "dct/loeffler_2d_fixed.h"
 #include "dct/loeffler_2d_fixed_inline.h"
 #include "dct/loeffler_2d_fixed_macro.h"
+
+#if ENABLE_ASM_COMPILATION
 #include "dct/loeffler_2d_fixed_asm.h"
+#endif // ENABLE_ASM_COMPILATION
 
 void run_dct(const DataType *data, long width, long height, void (*dct_func)(DataType[8][8], int16_t[8][8]) )
 {
@@ -31,7 +34,7 @@ void run_dct(const DataType *data, long width, long height, void (*dct_func)(Dat
             }
             // Call dct function
             (*dct_func)(image_region, dct_output_region);
-#if PRINT_DCT_OUTPUT != 0
+#if PRINT_DCT_OUTPUT
             // print output
             printf("Region %d, %d:\n", i, j);
             for (k = 0; k < 8; ++k) {
@@ -108,9 +111,11 @@ void dct(DataType *data, long width, long height, ExecutionMode executionMode)
         run_dct(data, width, height, dct_loeffler_2d_fixed_macro);
     }
 
+#if ENABLE_ASM_COMPILATION
     if (executionMode == LOEFFLER_2D_FIXED_ASM || executionMode == ALL) {
         // Eighth: loeffler fixed-point implementation using assembly instructions for butterfly operation
         printf("\nLoeffler fixed-point with assembly butterfly:\n");
         run_dct(data, width, height, dct_loeffler_2d_fixed_asm);
     }
+#endif // ENABLE_ASM_COMPILATION
 }

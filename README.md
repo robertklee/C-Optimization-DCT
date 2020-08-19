@@ -3,15 +3,36 @@
 ## Getting Started
 After cloning the repository, make a new directory called `build` and run `cmake ..` within it. The following CMake options are available, along with their defaults:
 
-- `ENABLE_OPT` (false): Enables various optimization targets each with a different optimization flag
-- `ENABLE_MACRO_EXPANSION` (false): Enables a target which expands macros and other pre-processor directives
+- `ENABLE_OPT` **(false)**: Enables various optimization targets each with a different optimization flag
+- `ENABLE_MACRO_EXPANSION` **(false)**: Enables a target which expands macros and other pre-processor directives
+- `ENABLE_OUTPUT` **(true)**: Enables printing to console of each DCT block
+- `ENABLE_SAVE_ASM` **(false)**: Enables the compiler to save intermediate assembly `.s` files
 
-The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. However, with a few modifications, it will compile to an x86 processor.
+The following CMake options are only available on an ARM C compiler:
+
+- `ENABLE_ASM_COMPILATION` **(false)**: Enables our target which contains our theoretical BTRFLY instruction that is hard-coded in ARM \_\_asm__ statements. To test the performance of this, change `BTRFLY_ASM_TYPE` in `include/util/constants.h` to `2`, which replaces the theoretical operator with an equivalent latency series of operations
+- `ENABLE_OPT_MAX` **(false)**: Enables a target with maximum optimization flags on
+- `ENABLE_BTRFLY_OPERATOR` **(true)**: Enables the assembly to be generated with BTRFLY operator. `ENABLE_SAVE_ASM` must be enabled. This will not run as it is a theoretical hardware operator.
+
+The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. **By default, it will compile for an x86 processor.**
 
 ### Running `dct` target
 To run the `dct` target, you need to pass it an input file. Sample files are stored in the `test` directory. Use the following command to run with a sample input:
 
+`./dct <input 8-bit image> <width> <height>`
+
+For example, 
+
 `./dct ../test/64_byte_input 8 8`
+
+### Running the highest optimized `dct` target on ARM
+To run the highest optimized version on **ARM** compiler, with `BTRFLY` replaced with the equivalent latency assembly instructions, run CMake with the following options:
+
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
+
+To view the optimized assembly code with the `BTRFLY` operator, run (Note this will cause a bad instruction error and thus cannot run):
+
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_SAVE_ASM=TRUE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
 
 ## Introduction
 The Discrete Cosine Transform (DCT) is a technique to extract frequency-domain information from a given input signal. The DCT is used in industry as a component of the JPEG and MPEG image compression standards. N×N blocks are used, where N=8 is most common. As consumers demand faster and higher quality data and consistent performance increases, it is increasingly important to optimize data compaction and transmission speeds. Hardware and firmware support for image compression, including the DCT, is an important component of the solution.
@@ -55,7 +76,7 @@ The DCT was implemented in each of the following ways, referred to hereafter as 
 5.	As previous, with 16-bit fixed-point operands.
 6.	As previous, with the Butterfly operation implemented as an inline routine.
 7.	As previous, with the Butterfly operation implemented as a C macro.
-8.	As previous, with the Butterfly operation implemented as a theoretical assembly instruction using hand-coded __asm__ statements.
+8.	As previous, with the Butterfly operation implemented as a theoretical assembly instruction using hand-coded \_\_asm__ statements.
 
 Each implementation took an 8x8 matrix of signed 8-bit integers as input and produced an 8x8 matrix of signed 16-bit integers as output. The input values from the loaded image file were unsigned 8-bit integers, so, to reduce the energy of the signal and thus the number of bits required to represent the data as signed integers, a level-off operation was performed before calling any of the implementations, which subtracted 128 from each 8-bit unsigned integer value and produced an 8-bit signed integer value. An inverse DCT operation would thus need to add 128 to each value as a final step in recreating the original image.
 

@@ -8,6 +8,19 @@
 #define SQRT_2_INV          0.707106781186547524400844362104849039284835937688474036588
 #define ROUND_NEAREST       0.5
 
+// BTRFLY_ASM_TYPE defines the way that the butterfly operation is implemented in asm.
+// 1 uses a "BTRFLY" assembly instruction.
+// 2 uses a sequence of assembly instructions intended to approximate the cost of the butterfly operation.
+// any other value uses nothing, i.e. a NOP.
+#ifndef BTRFLY_ASM_TYPE
+#define BTRFLY_ASM_TYPE 1
+#endif // BTRFLY_ASM_TYPE
+
+// Set to 1 for running correctness tests, where output is printed.
+#ifndef PRINT_DCT_OUTPUT
+#define PRINT_DCT_OUTPUT 1
+#endif // PRINT_DCT_OUTPUT
+
 // DCT_PRECISION: How many bits for each scaling factor.
 #if DCT_PRECISION != 10 && DCT_PRECISION != 8 && DCT_PRECISION != 7 && DCT_PRECISION != 6 && DCT_PRECISION != 4
 #ifdef DCT_PRECISION
@@ -140,8 +153,5 @@ typedef int8_t DataType;
 #else
 typedef uint8_t DataType;
 #endif // LEVEL_OFF_ACTIVE
-
-// Set to 1 for running correctness tests, where output is printed.
-#define PRINT_DCT_OUTPUT 0
 
 #endif // CONSTANTS_H
