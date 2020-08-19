@@ -4,12 +4,12 @@ project(seng440 LANGUAGES C)
 
 add_compile_options(-Wall -Werror -Wno-parentheses)
 
-option(ENABLE_OPT               "Enable optimization targets"   false)
-option(ENABLE_MACRO_EXPANSION   "Enable macro expansion target" false)
-option(ENABLE_ASM_COMPILATION   "Enable ASM compilation"        false)
-option(ENABLE_OUTPUT            "Enable printing to console"    true)
-option(ENABLE_SAVE_ASM          "Enable saving of intermediate asm" false)
-option(ENABLE_OPT_MAX           "Enable maximum optimization target" false)
+option(ENABLE_OPT               "Enable optimization targets"           false)
+option(ENABLE_MACRO_EXPANSION   "Enable macro expansion target"         false)
+option(ENABLE_ASM_COMPILATION   "Enable ASM compilation"                false)
+option(ENABLE_OUTPUT            "Enable printing to console"            true)
+option(ENABLE_SAVE_ASM          "Enable saving of intermediate asm"     false)
+option(ENABLE_OPT_MAX           "Enable maximum optimization target"    false)
 
 set(SOURCE_FILES_DCT
         ${PROJECT_SOURCE_DIR}/src/main.c
