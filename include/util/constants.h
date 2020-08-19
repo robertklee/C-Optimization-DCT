@@ -16,7 +16,7 @@
 
 // Set to 1 for running correctness tests, where output is printed.
 #ifndef PRINT_DCT_OUTPUT
-#define PRINT_DCT_OUTPUT TRUE
+#define PRINT_DCT_OUTPUT 1
 #endif // PRINT_DCT_OUTPUT
 
 // DCT_PRECISION: How many bits for each scaling factor.

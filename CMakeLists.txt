@@ -29,18 +29,26 @@ if (ENABLE_ASM_COMPILATION)
     set(SOURCE_FILES_DCT 
         ${SOURCE_FILES_DCT}
         ${PROJECT_SOURCE_DIR}/src/dct/loeffler_2d_fixed_asm.c)
+
+    add_definitions(-DENABLE_ASM_COMPILATION=1)
+else()
+    add_definitions(-DENABLE_ASM_COMPILATION=0)
 endif()
-add_definitions(-DENABLE_ASM_COMPILATION=${ENABLE_ASM_COMPILATION})
 
 # add printing
-add_definitions(-DPRINT_DCT_OUTPUT=${ENABLE_OUTPUT})
+if (ENABLE_OUTPUT)
+    add_definitions(-DPRINT_DCT_OUTPUT=1)
+else()
+    add_definitions(-DPRINT_DCT_OUTPUT=0)
+endif()
+
 
 # Base compilation flags
 set(BASE_COMPILE_FLAGS "${COMPILE_FLAGS} -std=c99 -g")
 
 # If intermediate asm output is enabled
 if (ENABLE_SAVE_ASM)
-    set(BASE_COMPILE_FLAGS "{BASE_COMPILE_FLAGS} -save-temps -fverbose-asm ")
+    set(BASE_COMPILE_FLAGS "${BASE_COMPILE_FLAGS} -save-temps -fverbose-asm ")
 endif()
 
 # If compiler is ARM
