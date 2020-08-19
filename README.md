@@ -28,11 +28,11 @@ For example, the following will run it on the 8x8 test image.
 ### Running the highest optimized `dct` target on ARM
 To run the highest optimized version on **ARM** compiler, with `BTRFLY` replaced with the equivalent latency assembly instructions, run CMake with the following options:
 
-`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_OPT_MAX=TRUE` (optional `-DENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
 
 To view the optimized assembly code with the `BTRFLY` operator, run (Note this will cause a bad instruction error and thus cannot run):
 
-`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_SAVE_ASM=TRUE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_SAVE_ASM=TRUE -DENABLE_OPT_MAX=TRUE` (optional `-DENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
 
 ### Running Valgrind profiling
 To run Valgrind profiling, use the script in the `script` folder. Update the `BASE` variable with the repository root directory. It is suggested to use a minimum of the following CMake options:
