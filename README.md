@@ -12,6 +12,7 @@ The following CMake options are only available on an ARM C compiler:
 
 - `ENABLE_ASM_COMPILATION` **(false)**: Enables our target which contains our theoretical BTRFLY instruction that is hard-coded in ARM \_\_asm__ statements. To test the performance of this, change `BTRFLY_ASM_TYPE` in `include/util/constants.h` to `2`, which replaces the theoretical operator with an equivalent latency series of operations
 - `ENABLE_OPT_MAX` **(false)**: Enables a target with maximum optimization flags on
+- `ENABLE_BTRFLY_OPERATOR` **(true)**: Enables the assembly to be generated with BTRFLY operator. `ENABLE_SAVE_ASM` must be enabled. This will not run as it is a theoretical hardware operator.
 
 The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. **By default, it will compile for an x86 processor.**
 
@@ -23,6 +24,15 @@ To run the `dct` target, you need to pass it an input file. Sample files are sto
 For example, 
 
 `./dct ../test/64_byte_input 8 8`
+
+### Running the highest optimized `dct` target on ARM
+To run the highest optimized version on **ARM** compiler, with `BTRFLY` replaced with the equivalent latency assembly instructions, run CMake with the following options:
+
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
+
+To view the optimized assembly code with the `BTRFLY` operator, run (Note this will cause a bad instruction error and thus cannot run):
+
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_SAVE_ASM=TRUE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
 
 ## Introduction
 The Discrete Cosine Transform (DCT) is a technique to extract frequency-domain information from a given input signal. The DCT is used in industry as a component of the JPEG and MPEG image compression standards. N×N blocks are used, where N=8 is most common. As consumers demand faster and higher quality data and consistent performance increases, it is increasingly important to optimize data compaction and transmission speeds. Hardware and firmware support for image compression, including the DCT, is an important component of the solution.
