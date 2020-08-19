@@ -18,6 +18,10 @@ The code is designed to be optimized for ARM 32-bit processor, and thus requires
 ### Running `dct` target
 To run the `dct` target, you need to pass it an input file. Sample files are stored in the `test` directory. Use the following command to run with a sample input:
 
+`./dct <input 8-bit image> <width> <height>`
+
+For example, 
+
 `./dct ../test/64_byte_input 8 8`
 
 ## Introduction
