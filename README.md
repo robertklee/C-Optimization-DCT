@@ -14,14 +14,14 @@ The following CMake options are only available on an ARM C compiler:
 - `ENABLE_OPT_MAX` **(false)**: Enables a target with maximum optimization flags on
 - `ENABLE_BTRFLY_OPERATOR` **(true)**: Enables the assembly to be generated with BTRFLY operator. `ENABLE_SAVE_ASM` must be enabled. This will not run as it is a theoretical hardware operator.
 
-The code is designed to be optimized for ARM 32-bit processor, and thus requires a ARM Linux GCC compiler to run the most optimized code. **By default, it will compile for an x86 processor.**
+The code is designed to be optimized for ARM 32-bit processor, and thus requires an ARM Linux GCC compiler to run the most optimized code. **By default, it will compile for an x86 processor.**
 
 ### Running `dct` target
 To run the `dct` target, you need to pass it an input file. Sample files are stored in the `test` directory. Use the following command to run with a sample input:
 
 `./dct <input 8-bit image> <width> <height>`
 
-For example, 
+For example, the following will run it on the 8x8 test image.
 
 `./dct ../test/64_byte_input 8 8`
 
@@ -33,6 +33,18 @@ To run the highest optimized version on **ARM** compiler, with `BTRFLY` replaced
 To view the optimized assembly code with the `BTRFLY` operator, run (Note this will cause a bad instruction error and thus cannot run):
 
 `cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_SAVE_ASM=TRUE -DENABLE_OPT_MAX=TRUE` (optional `ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`)
+
+### Running Valgrind profiling
+To run Valgrind profiling, use the script in the `script` folder. Update the `BASE` variable with the repository root directory. It is suggested to use a minimum of the following CMake options:
+
+#### x86
+`cmake .. ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`
+
+#### ARM
+`cmake .. -DENABLE_ASM_COMPILATION=TRUE -DENABLE_BTRFLY_OPERATOR=FALSE -DENABLE_OPT_MAX=TRUE ENABLE_OPT=TRUE -DENABLE_OUTPUT=FALSE`
+
+### Visualize Valgrind profiling output
+Run `kcachegrind` followed by the output file (stored in `valgrind` folder), and then change to `Cycle Estimation` and turn off `% Relative`
 
 ## Introduction
 The Discrete Cosine Transform (DCT) is a technique to extract frequency-domain information from a given input signal. The DCT is used in industry as a component of the JPEG and MPEG image compression standards. N×N blocks are used, where N=8 is most common. As consumers demand faster and higher quality data and consistent performance increases, it is increasingly important to optimize data compaction and transmission speeds. Hardware and firmware support for image compression, including the DCT, is an important component of the solution.
