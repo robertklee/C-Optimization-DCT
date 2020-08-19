@@ -10,6 +10,7 @@ option(ENABLE_ASM_COMPILATION   "Enable ASM compilation"                false)
 option(ENABLE_OUTPUT            "Enable printing to console"            true)
 option(ENABLE_SAVE_ASM          "Enable saving of intermediate asm"     false)
 option(ENABLE_OPT_MAX           "Enable maximum optimization target"    false)
+option(ENABLE_BTRFLY_OPERATOR   "Enable theoretical BTRFLY operator"    true)
 
 set(SOURCE_FILES_DCT
         ${PROJECT_SOURCE_DIR}/src/main.c
@@ -40,6 +41,13 @@ if (ENABLE_OUTPUT)
     add_definitions(-DPRINT_DCT_OUTPUT=1)
 else()
     add_definitions(-DPRINT_DCT_OUTPUT=0)
+endif()
+
+# add BTRFLY operator
+if (ENABLE_BTRFLY_OPERATOR)
+    add_definitions(-DBTRFLY_ASM_TYPE=1)
+else()
+    add_definitions(-DBTRFLY_ASM_TYPE=2)
 endif()
 
 

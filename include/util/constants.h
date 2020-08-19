@@ -12,7 +12,9 @@
 // 1 uses a "BTRFLY" assembly instruction.
 // 2 uses a sequence of assembly instructions intended to approximate the cost of the butterfly operation.
 // any other value uses nothing, i.e. a NOP.
+#ifndef BTRFLY_ASM_TYPE
 #define BTRFLY_ASM_TYPE 1
+#endif // BTRFLY_ASM_TYPE
 
 // Set to 1 for running correctness tests, where output is printed.
 #ifndef PRINT_DCT_OUTPUT
