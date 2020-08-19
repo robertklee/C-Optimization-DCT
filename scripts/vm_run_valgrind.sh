@@ -1,6 +1,6 @@
 #! /bin/bash
 
-BASE="/root/repo"
+BASE="/root/C-Optimization-DCT"
 
 BUILD="${BASE}/build"
 TEST="${BASE}/test"
